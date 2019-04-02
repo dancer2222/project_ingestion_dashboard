@@ -38,3 +38,25 @@ Run containers (from `laradock` folder)
 ```
 docker-compose up -d nginx
 ```
+
+
+Enter to workspace
+```
+cd laradock
+docker-compose exec workspace bash
+// do smth
+```
+
+Default user: username
+
+Frontend (run from root folder).
+
+Source files are in: `resources/scss`, `resources/js`, `resources/css` and so on.
+```
+npm run watch-poll 
+```
+___
+- Laravel [docs](https://laravel.com/docs/5.8/)
+- Stuck in roles/permissions? Read [ spatie docs ](https://github.com/spatie/laravel-permission)
+- Laradock [ guides ](https://laradock.io/guides/)
+- Template [demo](https://colorlib.com/polygon/elaadmin/index.html) and [source](https://github.com/puikinsh/ElaAdmin/tree/master)

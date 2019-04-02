@@ -1,3 +1,6 @@
+@php
+$user = auth()->user()  
+@endphp
 <!doctype html>
 <html lang="en">
   <head>
@@ -11,8 +14,9 @@
 
     <title>Hello, world!</title>
   </head>
-  <body>
+  <body class="{{ $user ?: 'd-flex'}}">
 
+    @if($user)
     <!-- Left Panel -->
     <aside id="left-panel" class="left-panel">
         <nav class="navbar navbar-expand-sm navbar-default">
@@ -93,8 +97,11 @@
             </div><!-- /.navbar-collapse -->
         </nav>
     </aside>
+
+    @endif
     
-    <div id="right-panel" class="right-panel">
+    <div id="right-panel" class="{{ $user ? 'right-panel' : ' align-self-center w-100'}}">
+        @if($user)
 
         <header id="header" class="header">
             <div class="top-left">
@@ -192,13 +199,15 @@
 
                             <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
 
-                            <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
+                            <a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit()"><i class="fa fa-power -off"></i>Logout</a>
                         </div>
                     </div>
 
                 </div>
             </div>
         </header>
+        
+        @endif
 
         <div class="content">
             <!-- Animated -->
@@ -211,5 +220,9 @@
 
     {{-- scripts --}}
   <script src="{{ asset('/js/app.js') }}"></script>
+
+<form action="{{ url('logout') }}" method="post" id="logout-form">
+    {{ csrf_field() }}
+</form>
   </body>
 </html>
