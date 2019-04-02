@@ -47,7 +47,11 @@ docker-compose exec workspace bash
 // do smth
 ```
 
-Default user: username
+Default user
+```
+username: admin
+password: 123123
+```
 
 Frontend (run from root folder).
 
