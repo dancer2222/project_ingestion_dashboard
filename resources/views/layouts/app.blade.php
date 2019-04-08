@@ -12,7 +12,7 @@ $user = auth()->user()
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/all.css') }}">
 
-    <title>Hello, world!</title>
+    <title>@yield('title')</title>
   </head>
   <body class="{{ $user ?: 'd-flex'}}">
 
@@ -56,7 +56,7 @@ $user = auth()->user()
                         </ul>
                     </li>
 
-                    <li class="menu-title">Icons</li><!-- /.menu-title -->
+                    {{-- <li class="menu-title">Icons</li><!-- /.menu-title -->
 
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>Icons</a>
@@ -92,7 +92,7 @@ $user = auth()->user()
                             <li><i class="menu-icon fa fa-sign-in"></i><a href="page-register.html">Register</a></li>
                             <li><i class="menu-icon fa fa-paper-plane"></i><a href="pages-forget.html">Forget Pass</a></li>
                         </ul>
-                    </li>
+                    </li> --}}
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
@@ -106,8 +106,8 @@ $user = auth()->user()
         <header id="header" class="header">
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img src="images/logo.png" alt="Logo"></a>
-                    <a class="navbar-brand hidden" href="./"><img src="images/logo2.png" alt="Logo"></a>
+                    {{-- <a class="navbar-brand" href="./"><img src="images/logo.png" alt="Logo"></a> --}}
+                    {{-- <a class="navbar-brand hidden" href="./"><img src="images/logo2.png" alt="Logo"></a> --}}
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>
             </div>
@@ -122,7 +122,7 @@ $user = auth()->user()
                             </form>
                         </div>
 
-                        <div class="dropdown for-notification">
+                        {{-- <div class="dropdown for-notification">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
                                 <span class="count bg-danger">3</span>
@@ -142,9 +142,9 @@ $user = auth()->user()
                                     <p>Server #3 overloaded.</p>
                                 </a>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="dropdown for-message">
+                        {{-- <div class="dropdown for-message">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="message" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-envelope"></i>
                                 <span class="count bg-primary">4</span>
@@ -184,22 +184,33 @@ $user = auth()->user()
                                     </div>
                                 </a>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="user-area dropdown float-right">
                         <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="user-avatar rounded-circle" src="images/admin.jpg" alt="User Avatar">
+                            {{-- <img class="user-avatar rounded-circle" src="images/admin.jpg" alt="User Avatar"> --}}
+                            <i class="fas fa-user-circle fa-2x"></i>
                         </a>
 
                         <div class="user-menu dropdown-menu">
-                            <a class="nav-link" href="#"><i class="fa fa- user"></i>My Profile</a>
+                            <a class="nav-link" href="#"><i class="fa fa-user"></i>My Profile</a>
 
-                            <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
+                            {{-- <a class="nav-link" href="#">
+                                <i class="fa fa-envelope"></i>
+                                Notifications 
+                                <span class="count">13</span>
+                            </a> --}}
 
-                            <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
+                            <a class="nav-link" href="{{ route('users.index') }}">
+                                <i class="fas fa-users-cog"></i>
+                                Users
+                            </a>
 
-                            <a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit()"><i class="fa fa-power -off"></i>Logout</a>
+                            <a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit()">
+                                <i class="fa fa-power-off"></i>
+                                Logout
+                            </a>
                         </div>
                     </div>
 
@@ -219,10 +230,13 @@ $user = auth()->user()
     </div>
 
     {{-- scripts --}}
-  <script src="{{ asset('/js/app.js') }}"></script>
+    <script src="{{ asset('/js/app.js') }}"></script>
 
-<form action="{{ url('logout') }}" method="post" id="logout-form">
-    {{ csrf_field() }}
-</form>
+    <form action="{{ url('logout') }}" method="post" id="logout-form">
+        {{ csrf_field() }}
+    </form>
+
+    @include('notifications')
+
   </body>
 </html>

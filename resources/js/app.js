@@ -10,6 +10,7 @@ require('jquery-match-height');
 require('./theme/main');
 require('axios');
 window.Vue = require('vue');
+window.toastr = require('toastr')
 
 /**
  * The following block of code may be used to automatically register your
@@ -22,7 +23,6 @@ window.Vue = require('vue');
 const files = require.context('./', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-// Vue.component('providers-list', require('./components/ProvidersList/ProvidersList').default);
 Vue.component('licensors-list', require('./components/Licensors/Licensors').default);
 Vue.component('search-form', require('./components/Licensors/SearchForm').default);
 
@@ -36,5 +36,9 @@ const app = new Vue({
     el: '#app'
 });
 
-
 console.log("Compiled!!!");
+
+jQuery(document).ready(function($) {
+    
+});
+

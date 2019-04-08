@@ -8,13 +8,12 @@ Fork main repo and clone it to your local
 git clone https://github.com/[your_github_username]/project_ingestion_dashboard dashboard
 cd dashboard
 composer install --ignore-platform-reqs
-php artisan key:generate
 ```
-
 
 Set proper env values in `.env` file
 ```
-cp .env-example .env
+cp .env.example .env
+php artisan key:generate
 ```
 
 
@@ -28,10 +27,21 @@ DB_USERNAME=root
 DB_PASSWORD=
  ```
 
+Pull or update git submodule `laradock`
+If that's the first time you checkout a repo you need to use --init first:
+```
+git submodule update --init --recursive
+```
+
+
+Later use this command: `git submodule update --recursive --remote`
+
+
+
 Adapt laradock `.env` file to your needs (`dashboard/laradock/.env`)
 ```
 cd laradock
-cp .env-example .env
+cp env-example .env
 ```
 
 Run containers (from `laradock` folder)
