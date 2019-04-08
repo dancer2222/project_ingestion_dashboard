@@ -220,7 +220,7 @@ $user = auth()->user()
         
         @endif
 
-        <div class="content">
+        <div class="content" id="app">
             <!-- Animated -->
             <div class="animated fadeIn">
                 @yield('content')

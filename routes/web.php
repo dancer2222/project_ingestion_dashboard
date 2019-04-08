@@ -17,6 +17,15 @@ Route::group(['middleware' => ['auth']], function () {
     });
     
     Route::get('/home', 'HomeController@index')->name('home');
+
+    // Licensors Search
+    Route::name('licensors.')->prefix('licensors')->namespace('Licensors')->group(function ()
+    {
+        Route::get('/', 'LicensorsController@index')->name('index');
+        Route::get('/get-json', 'LicensorsController@showAll')->name('get-json');
+        Route::post('/search', 'LicensorsController@getBySearch')->name('search');
+    });
+
     
     Route::group(['middleware' => ['permission:manage users']], function () {
         // Users
