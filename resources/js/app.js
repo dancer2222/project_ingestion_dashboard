@@ -10,6 +10,7 @@ require('jquery-match-height')
 require('./theme/main')
 
 window.Vue = require('vue');
+window.toastr = require('toastr')
 
 /**
  * The following block of code may be used to automatically register your
@@ -34,5 +35,6 @@ window.Vue = require('vue');
 //     el: '#app'
 // });
 
-
-console.log("Compiled!!!")
+jQuery(document).ready(function($) {
+    
+});
