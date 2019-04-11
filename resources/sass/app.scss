@@ -23,3 +23,32 @@
 body {
   min-height: 100vh !important;
 }
+
+header .form-inline .search-form button.find {
+  right: 40px;
+}
+
+header .form-inline .search-form select {
+  background: #131c21;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  position: absolute;
+  right: 73px;
+  top: 14%;
+}
+
+header .form-inline .search-form button.find:hover,
+header .form-inline .search-form button.search-close:hover,
+header .form-inline .search-form select:hover {
+  color: #949494 !important;
+}
+
+header .form-inline .search-form select:hover,
+header .form-inline .search-form select:hover option {
+  color: #fff !important;
+}
+
+header .form-inline .search-form input[type="text"] {
+  padding: 10px 221px 10px 15px !important;
+}

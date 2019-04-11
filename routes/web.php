@@ -52,6 +52,28 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/permissions/create', 'Roles\\PermissionsController@create')->name('permissions.create'); 
         Route::post('/permissions/create', 'Roles\\PermissionsController@store')->name('permissions.store');
     });
+
+    Route::namespace('Media')->group(function () {
+        // Books
+        Route::name('movies.')->prefix('/movies')->group(function () {
+            Route::get('/', 'MoviesController@index')->name('index');
+        });
+
+        // Albums
+        Route::name('albums.')->prefix('/albums')->group(function () {
+            Route::get('/', 'AlbumsController@index')->name('index');
+        });
+
+        // Audiobooks
+        Route::name('audiobooks.')->prefix('/audiobooks')->group(function () {
+            Route::get('/', 'AudiobooksController@index')->name('index');
+        });
+
+        // Games
+        Route::name('games.')->prefix('/games')->group(function () {
+            Route::get('/', 'GamesController@index')->name('index');
+        });
+    });
     // Auth::logout();
 });
 
