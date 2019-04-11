@@ -54,6 +54,9 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::namespace('Media')->group(function () {
+        // Search
+        Route::get('/search', 'SearchController@index')->name('search');
+
         // Books
         Route::name('movies.')->prefix('/movies')->group(function () {
             Route::get('/', 'MoviesController@index')->name('index');
