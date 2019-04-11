@@ -118,7 +118,22 @@ $user = auth()->user()
                         <div class="form-inline">
                             <form class="search-form">
                                 <input class="form-control mr-sm-2" type="text" placeholder="Search ..." aria-label="Search">
-                                <button class="search-close" type="submit"><i class="fa fa-close"></i></button>
+
+                                <select class="custom-select custom-select-sm border-bottom rounded-0">
+                                    <option disabled selected>Media type</option>
+                                    <option value="1">Books</option>
+                                    <option value="2">Movies</option>
+                                    <option value="3">Games</option>
+                                    <option value="4">Albums</option>
+                                </select>
+
+                                <button class="find color-white">
+                                    <i class="fas fa-search"></i>
+                                </button>
+
+                                <button class="search-close" >
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </form>
                         </div>
 
