@@ -15,6 +15,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('home');
     });
+    Route::post('/awsCheck', 'Aws\\AwsController@checkForAwsBucket')->name('awsCheck');
     
     Route::get('/home', 'HomeController@index')->name('home');
 

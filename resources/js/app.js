@@ -25,6 +25,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 Vue.component('licensors-list', require('./components/Licensors/Licensors').default);
 Vue.component('search-form', require('./components/Licensors/SearchForm').default);
+Vue.component('drop', require('./components/Drop/Drop').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
