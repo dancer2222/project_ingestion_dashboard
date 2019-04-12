@@ -15,6 +15,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('home');
     });
+    Route::group(['prefix' => 'ingestion', 'namespace' => 'Ingestion'], function () {
+        Route::get('/', 'Process\\IngestionController@indexIngestMovies')->name('indexIngestMovies');
+        Route::post('/movie/awsCheck', 'Aws\\AwsController@checkMovieForAwsBucket')->name('awsCheck');
+    });
+
     
     Route::get('/home', 'HomeController@index')->name('home');
 

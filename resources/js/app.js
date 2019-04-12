@@ -31,6 +31,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 Vue.component('licensors-list', require('./components/Licensors/Licensors').default);
 Vue.component('search-form', require('./components/Licensors/SearchForm').default);
+Vue.component('meatadata-form', require('./components/MetadataForm/MetadataForm').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -38,9 +39,9 @@ Vue.component('search-form', require('./components/Licensors/SearchForm').defaul
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-// const app = new Vue({
-//     el: '#app'
-// });
+const app = new Vue({
+    el: '#app'
+});
 
 console.log("Compiled!!!");
 
@@ -50,8 +51,6 @@ const router = new VueRouter({
 
 jQuery(document).ready(function($) {
     if ($('#media_search_page').length > 0) {
-        
-        
         const app = new Vue({
             el: '#media_search_page',
             render: h => h(SearchApp),

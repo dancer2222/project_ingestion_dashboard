@@ -18,7 +18,6 @@
                         <button type="submit"
                                 class="btn btn-primary pl-4 pr-4 mb-2"
                                 @click="addReply">Find
-
                         </button>
                     </div>
                 </div>
