@@ -10,8 +10,14 @@ require('jquery-match-height');
 require('./theme/main');
 require('axios');
 window.Vue = require('vue');
+
 window.toastr = require('toastr')
 
+import VueRouter from 'vue-router'
+import Routes from './components/Media/Search/Routes'
+import SearchApp from './components/Media/Search/SearchComponent'
+
+Vue.use(VueRouter)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -33,13 +39,25 @@ Vue.component('drop', require('./components/Drop/Drop').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-    el: '#app'
-});
+// const app = new Vue({
+//     el: '#app'
+// });
 
 console.log("Compiled!!!");
 
+const router = new VueRouter({
+    routes: Routes
+}); 
+
 jQuery(document).ready(function($) {
-    
+    if ($('#media_search_page').length > 0) {
+        
+        
+        const app = new Vue({
+            el: '#media_search_page',
+            render: h => h(SearchApp),
+            router: router,
+        })
+    }
 });
 
