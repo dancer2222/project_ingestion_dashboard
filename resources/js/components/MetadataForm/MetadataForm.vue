@@ -1,10 +1,17 @@
 <template>
     <div class="container">
-        <div class="input-group mb-3">
+        <div class="input-group-prepend">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">Licensor folder name</span>
+                <label class="input-group-text" for="inputGroupSelect01">Select licensor folder name</label>
             </div>
-            <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" v-model="licensor" >
+            <select class="custom-select" id="inputGroupSelect01" v-model="licensor">
+                <option>ECHELON</option>
+                <option>GRAVITAS</option>
+                <option>MVD</option>
+                <option>NAVI</option>
+                <option>RSQUARED</option>
+                <option>SCREENMEDIA</option>
+            </select>
         </div>
 
         <table class="table table-bordered table-responsive" v-if="licensor !== null">
@@ -52,15 +59,17 @@
         </table>
 
         <div class="col-3 offset-9 text-right my-3">
-            <button @click="add" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">Add item</button>
+            <button @click="add" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">Add
+                item
+            </button>
         </div>
         <div class="col-3 offset-9 text-right my-3">
-            <button @click="submit" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">Submit</button>
+            <button @click="submit" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">
+                Submit
+            </button>
         </div>
-
     </div>
 </template>
-
 
 <script>
     export default {
@@ -69,7 +78,7 @@
                 editIndex: null,
                 originalData: null,
                 items: [],
-                licensor: null
+                licensor: null,
             }
         },
         methods: {
@@ -94,7 +103,7 @@
                     this.editIndex = 1
                     this.originalData = 1
                 } else {
-                    axios.post('/awsCheck', {body: item.title, folder: this.licensor})
+                    axios.post('/ingestion/movie/awsCheck', {body: item.title, folder: this.licensor})
                         .then((response) => {
                             if (response.data !== true) {
                                 this.editIndex = 1
@@ -105,7 +114,6 @@
                             }
                         });
                 }
-                console.log(item.title);
             },
             submit() {
                 console.log(this.items);
