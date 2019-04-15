@@ -56,10 +56,10 @@ export default {
     },
     methods: {
         submitForm: function (event) {
-            console.log(this.mediaType, this.query)
+            console.log(this.mediaType, this.query);
 
             if (this.query.length > 0) {
-                this.$router.push(this.mediaType);
+                this.$router.push({path:this.mediaType, query:{q:this.query}});
             }
         },
     },

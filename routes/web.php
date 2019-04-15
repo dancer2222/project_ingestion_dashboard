@@ -62,9 +62,17 @@ Route::group(['middleware' => ['auth']], function () {
         // Search
         Route::get('/search', 'SearchController@index')->name('search');
 
-        // Books
+        // Movies
         Route::name('movies.')->prefix('/movies')->group(function () {
             Route::get('/', 'MoviesController@index')->name('index');
+        });
+
+        // Books
+        Route::name('books.')->prefix('/books')->group(function () {
+            Route::get('/', 'BooksController@index')->name('index');
+            Route::get('/{id}', 'BooksController@showBookById')->name('showBookById');
+            Route::get('/list/{id}', 'BooksController@showListById')->name('showListById');
+            //Route::get('/{id}/edit', 'BooksController@bookById')->name('bookById');
         });
 
         // Albums
