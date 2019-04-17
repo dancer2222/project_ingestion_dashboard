@@ -11,13 +11,10 @@ require('./theme/main');
 require('axios');
 window.Vue = require('vue');
 
-window.toastr = require('toastr')
-
 import VueRouter from 'vue-router'
 import Routes from './components/Media/Search/Routes'
 import SearchApp from './components/Media/Search/SearchComponent'
 
-Vue.use(VueRouter)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -45,13 +42,15 @@ const app = new Vue({
 
 console.log("Compiled!!!");
 
-const router = new VueRouter({
-    routes: Routes
-}); 
 
 jQuery(document).ready(function($) {
     if ($('#media_search_page').length > 0) {
-        const app = new Vue({
+        var router = new VueRouter({
+            routes: Routes
+        });
+
+        Vue.use(VueRouter);
+        const appSearch = new Vue({
             el: '#media_search_page',
             render: h => h(SearchApp),
             router: router,

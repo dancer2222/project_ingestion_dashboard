@@ -15,14 +15,13 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <select id="media_type" name="media_type" class="form-control" 
+                                <select id="media_type" name="media_type" v-bind:class="['form-control', {'is-invalid': isMediaTypeInvalid}]"
                                     v-model="mediaType">
                                     <option disabled value="">Media type</option>
-                                    <option value="books">Books</option>
-                                    <option value="movies">Movies</option>
-                                    <option value="audiobooks">Audiobooks</option>
-                                    <option value="albums">Albums</option>
-                                    <option value="games">Games</option>
+
+                                    <option v-for="media_type in mediaTypes"
+                                        v-bind:value="media_type">{{ media_type }}</option>
+
                                 </select>
                             </div>
 
@@ -36,31 +35,65 @@
                         
                     </form>
                 </div>
+
             </div>
 
         </div>
 
-        <router-view></router-view>
+
+        <transition>
+            <router-view></router-view>
+        </transition>
+
     </div>
 </template>
 
 <script>
+import msg from 'toastr';
+
+const mediaTypes = [
+    'books', 'movies', 'audiobooks', 'albums', 'games',
+];
 
 export default {
     name: 'App',
     data: function () {
         return {
-            mediaType: '',
-            query: ''
+            isMediaTypeInvalid: false,
+            mediaTypes: mediaTypes,
+            mediaType: false,
+            query: this.$route.query.q
+        }
+    },
+    mounted: function () {
+        for (let media_type of this.mediaTypes) {
+            if (this.$route.fullPath.match(media_type) !== null) {
+                this.mediaType = media_type;
+            }
         }
     },
     methods: {
-        submitForm: function (event) {
-            console.log(this.mediaType, this.query)
+        submitForm: function () {
+            if (!this.mediaType) {
+                this.isMediaTypeInvalid = true;
+                msg.warning("Please choose the media type");
 
-            if (this.query.length > 0) {
-                this.$router.push(this.mediaType);
+                return;
             }
+
+            this.isLoading = true;
+            this.isMediaTypeInvalid = false;
+
+            this.$router.push({
+                name: this.mediaType,
+                path: '/'+this.mediaType,
+                query: {
+                    q: this.query,
+                },
+                params: {
+                    q: this.query,
+                },
+            });
         },
     },
 }
