@@ -71,8 +71,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Books
         Route::name('books.')->prefix('/books')->group(function () {
-            Route::get('/', 'BooksController@showListById')->name('showListById');
-            Route::get('/{id}', 'BooksController@showBookById')->name('showBookById');
+            Route::get('/', 'BooksController@index')->name('index');
+            Route::get('/{id}', 'BooksController@show')->name('show');
             //Route::post('/{id}/edit', 'BooksController@bookById')->name('bookById');
         });
 
