@@ -21,7 +21,7 @@
                     <!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->
 
                     <div class="card-body">
-                        <button class="btn btn-outline-warning float-right" >edit</button>
+                        <button class="btn btn-outline-warning float-right" v-on:click="editBook">edit</button>
                         <div class="row">
                             <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="book" v-for="(value, key) in book">
                                 <b>{{ key }}</b> - {{ value }}
@@ -63,19 +63,19 @@
                     self.isError = true;
                 })
             },
-
+            editBook: function (e) {
+                this.$router.push({
+                    name: 'books_edit',
+                    path: 'book',
+                    params: { book: this.book, fetchData: this.fetchData },
+                })
+            },
         },
         mounted() {
             console.log('book component');
             this.fetchData();
         },
-        // editBook: function (e) {
-        //     this.$router.push({
-        //         name: 'movie_edit',
-        //         path: 'movie',
-        //         params: { movie: this.movie, fetchData: this.fetchData },
-        //     })
-        // },
+
     }
 
 </script>

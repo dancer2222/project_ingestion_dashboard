@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::name('books.')->prefix('/books')->group(function () {
             Route::get('/', 'BooksController@index')->name('index');
             Route::get('/{id}', 'BooksController@show')->name('show');
-            //Route::post('/{id}/edit', 'BooksController@bookById')->name('bookById');
+            Route::post('/{id}', 'BooksController@update')->name('update');
         });
 
         // Albums

@@ -16,7 +16,7 @@ export default [
         children: [
             {path: '', name: 'books', component: BookList},
             {path: ':id', name:'booksData', component: Book},
-            {path: ':id/edit', component: BookEdit},
+            {path: ':id/edit', name:'books_edit', component: BookEdit},
         ]
     },
 
