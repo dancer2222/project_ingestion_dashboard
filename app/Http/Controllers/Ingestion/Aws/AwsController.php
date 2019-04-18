@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Ingestion\Aws;
 
-use Aws\S3\S3Client;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,29 +14,44 @@ use App\Http\Controllers\Controller;
 class AwsController extends Controller
 {
     /**
-     * @param Request $request
+     * @var
+     */
+    private $s3;
+
+    /**
+     * AwsController constructor.
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function __construct() {
+        $this->s3 = app()->make('aws')->createClient('s3');
+    }
+
+    /**
+     * @param  Request  $request
      *
      * @return false|string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function checkMovieForAwsBucket(Request $request)
-    {
-        $s3Client = new S3Client(
-                [
-                        'key'     => env('AWS_ACCESS_KEY_ID', ''),
-                        'secret'  => env('AWS_SECRET_ACCESS_KEY', ''),
-                        'region'  => env('AWS_DEFAULT_REGION'),
-                        'version' => 'latest',
-                ]
-
-        );
+    public function checkMovieForAwsBucket(Request $request) {
 
         try {
-            $result = $s3Client->doesObjectExist(env('AWS_BUCKET'),
-                                                 $request->folder . '/Movies/' . $request->body);
+            $result = $this->s3->doesObjectExist(env('AWS_BUCKET'),
+                $request->folder.'/Movies/'.$request->body);
         } catch (Exception $exception) {
             return json_encode($exception->getMessage());
         }
 
         return json_encode($result);
+    }
+
+    public function copyDataToAwsBucket(Request $request) {
+
+        $result = $this->s3->copyObject([
+            'Bucket' => 'content-ingestion-brightcove',
+            'Key' => 'TEST/dancer.dat',
+            'CopySource' => 'book-service-hyuna/books/9781460303436/9781460303436.dat',
+        ]);
+
+        return $result;
     }
 }

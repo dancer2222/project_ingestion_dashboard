@@ -1900,16 +1900,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['endpoint'],
   data: function data() {
@@ -2236,8 +2226,9 @@ __webpack_require__.r(__webpack_exports__);
         this.editIndex = 1;
         this.originalData = 1;
       } else {
+        console.log(item.filename);
         axios.post('/ingestion/movie/awsCheck', {
-          body: item.title,
+          body: item.filename,
           folder: this.licensor
         }).then(function (response) {
           if (response.data !== true) {
@@ -2251,7 +2242,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     submit: function submit() {
-      console.log(this.items);
+      axios.post('/ingestion/movie/awsCopy', {
+        body: this.items,
+        folder: this.licensor
+      }).then(function (response) {
+        console.log(response.data);
+      });
     }
   }
 });

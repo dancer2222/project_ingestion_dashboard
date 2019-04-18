@@ -103,7 +103,8 @@
                     this.editIndex = 1
                     this.originalData = 1
                 } else {
-                    axios.post('/ingestion/movie/awsCheck', {body: item.title, folder: this.licensor})
+                    console.log(item.filename);
+                    axios.post('/ingestion/movie/awsCheck', {body: item.filename, folder: this.licensor})
                         .then((response) => {
                             if (response.data !== true) {
                                 this.editIndex = 1
@@ -115,8 +116,12 @@
                         });
                 }
             },
+
             submit() {
-                console.log(this.items);
+                axios.post('/ingestion/movie/awsCopy', {body: this.items, folder: this.licensor})
+                    .then((response) => {
+                        console.log(response.data);
+                    });
             }
         },
     }
