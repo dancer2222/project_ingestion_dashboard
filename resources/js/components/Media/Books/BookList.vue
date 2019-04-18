@@ -6,6 +6,12 @@
             </div>
 
             <div class="card-body">
+
+                <div class="alert alert-secondary" role="alert"
+                     v-if="books.total !== null && books.total === 0">
+                    No books found by <b>"{{ $route.query.q }}"</b>
+                </div>
+
                 <table class="table table-hover">
                     <thead class="thead-dark">
                     <tr>
@@ -16,27 +22,35 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="book in books"
+                    <tr v-for="book in books.data"
                         :style="{cursor:'pointer'}"
                         @click = "getBookData">
                         <th scope="row">{{ book.id }}</th>
                         <td>{{ book.title }}</td>
                         <td>{{ book.isbn}}</td>
-
-                        <td v-if="book.status == 'active'">
-                                <span class="font-weight-bold badge badge-success">
-                                    {{ book.status }}
-                                </span>
-                        </td>
-                        <td v-else>
-                                <span class="font-weight-bold badge badge-danger">
-                                    {{ book.status }}
-                                </span>
-                        </td>
+                        <span v-bind:class="['badge', book.status === 'active' ? 'badge-success' : 'badge-danger']">{{ book.status }}</span>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
+            <nav aria-label="Page navigation" class="mx-auto">
+                <paginate v-if="books.total !== null && books.total >1"
+                          v-model="page"
+                          :initial-page="books.current_page"
+                          :page-count="Math.round(books.total / books.per_page)"
+                          :click-handler="changePage"
+                          :prev-text="'Prev'"
+                          :next-text="'Next'"
+                          :container-class="'pagination'"
+                          :page-class="'page-item'"
+                          :next-class="'page-item'"
+                          :prev-class="'page-item'"
+                          :page-link-class="'page-link'"
+                          :prev-link-class="'page-link'"
+                          :next-link-class="'page-link'">
+                </paginate>
+            </nav>
 
         </div>
     </div>
@@ -44,30 +58,52 @@
 
 <script>
     import axios from 'axios'
+    import Paginate from 'vuejs-paginate'
 
     export default {
         name: 'booksList',
+        components: {Paginate},
         data: function () {
             return {
-                q: this.$route.query.q,
                 mediaType: 'books',
+                q: this.$route.query.q,
+                isList: true,
                 books: [],
+                page: this.$route.query.page,
             }
         },
         methods: {
-            getBookData: function ($event) {
-                this.$router.push({path:this.mediaType + '/id', query:{q:this.q}});
-            }
+            getBookData: function () {
+                this.$router.push({name: 'booksData', path:this.mediaType + '/' + this.q, params: { id: this.q }});
+            },
+            changePage: function (page) {
+                this.page = page;
+                this.$router.push({
+                    path: this.$route.fullPath,
+                    query: {
+                        q: this.$route.query.q,
+                        page: page
+                    }
+                });
+            },
+            fetchData: function () {
+                let self = this;
+
+                axios.get(this.mediaType, {
+                    params: {
+                        q: this.$route.query.q,
+                        page: this.page,
+                    },
+                }).then(function (response) {
+                    self.books = response.data.books;
+                });
+            },
         },
         mounted() {
-            var self = this;
-
-            if (this.books.length === 0) {
-                axios.get(this.mediaType + '/list/' + this.q )
-                    .then(function (response) {
-                        self.books = response.data;
-                    });
-            }
-        }
+            this.fetchData();
+        },
+        watch: {
+            '$route': 'fetchData'
+        },
     }
 </script>

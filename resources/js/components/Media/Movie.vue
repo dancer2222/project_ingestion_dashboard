@@ -9,17 +9,17 @@
                     <div class="card-header">
                         <button class="btn btn-outline-dark float-left mr-3" v-on:click="$router.back()">Back</button>
 
-                        <strong>ISBN:</strong> {{book.isbn}} <strong>Title:</strong> {{ book.title }}
+                        {{ movie.title }}
 
-                        <button class="btn btn-outline-warning float-right" >edit</button>
+                        <button class="btn btn-outline-warning float-right" v-on:click="editMovie">edit</button>
                     </div>
-                    <!--                    <img class="card-img-top mx-auto" src="img/no_product_image.png"-->
-                    <!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->
+<!--                    <img class="card-img-top mx-auto" src="img/no_product_image.png"-->
+<!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->
 
                     <div class="card-body">
 
                         <div class="row">
-                            <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="book" v-for="(value, key) in book">
+                            <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="movie" v-for="(value, key) in movie">
                                 <b>{{ key }}</b> - {{ value }}
                             </p>
                         </div>
@@ -34,46 +34,44 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from 'axios';
 
     export default {
         debug: true,
-        name: 'booksDataView',
+        name: 'movie',
         data: function () {
             return {
                 isError: false,
                 errorMessage: 'Something went wrong. Please try reloading the <a href="javascript:location.reload();">page</a>',
-                book: {},
-                mediaType: 'books',
+                movie: {},
             }
+        },
+        mounted() {
+            console.log('movie component');
+            this.fetchData();
         },
         methods: {
             fetchData: function () {
                 let self = this;
-                axios.get(this.mediaType + '/' + this.$route.params.id)
+
+                axios.get(location.origin + '/movies/' + this.$route.params.id)
                     .then(function (response) {
                         if (Object.keys(response.data).length > 0) {
-                            self.book = response.data;
+                            self.movie = response.data;
                         } else {
                             self.isError = true;
                         }
                     }).catch(function (error) {
-                    self.isError = true;
+                        self.isError = true;
+                    })
+            },
+            editMovie: function (e) {
+                this.$router.push({
+                    name: 'movie_edit',
+                    path: 'movie',
+                    params: { movie: this.movie, fetchData: this.fetchData },
                 })
             },
-
         },
-        mounted() {
-            console.log('book component');
-            this.fetchData();
-        },
-        // editBook: function (e) {
-        //     this.$router.push({
-        //         name: 'movie_edit',
-        //         path: 'movie',
-        //         params: { movie: this.movie, fetchData: this.fetchData },
-        //     })
-        // },
     }
-
 </script>

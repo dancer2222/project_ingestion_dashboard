@@ -37,12 +37,27 @@ class BooksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showListById($id)
+    public function showListById(Request $request)
     {
-        $book = Book::select('id', 'title', 'isbn', 'status')->where('id', $id)->get();
+        $message = '';
+        $status = '';
 
-        return response()->json($book);
+        try {
+            $booksQuery = Book::query();
+            if ($request->get('q')) {
+                $booksQuery ->select('id', 'title', 'isbn', 'status')->where('id', $request->get('q', ''));
+            }
+            $books = $booksQuery->paginate();
+        } catch (\Exception $e) {
+            $message = "There're no books by this query.";
+            $books = [];
+        }
 
+        return response()->json([
+            'books' => $books,
+            'status' => $status,
+            'message' => $message
+        ]);
     }
 
     /**
@@ -53,8 +68,7 @@ class BooksController extends Controller
      */
     public function showBookById($id)
     {
-        $books = Book::where('id', $id)->get();
-        return response()->json($books);
+        return response()->json(Book::find((int)$id));
     }
 
     /**

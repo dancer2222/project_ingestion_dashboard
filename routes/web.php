@@ -65,14 +65,15 @@ Route::group(['middleware' => ['auth']], function () {
         // Movies
         Route::name('movies.')->prefix('/movies')->group(function () {
             Route::get('/', 'MoviesController@index')->name('index');
+            Route::get('/{id}', 'MoviesController@show')->name('show');
+            Route::post('/{id}', 'MoviesController@update')->name('update');
         });
 
         // Books
         Route::name('books.')->prefix('/books')->group(function () {
-            Route::get('/', 'BooksController@index')->name('index');
+            Route::get('/', 'BooksController@showListById')->name('showListById');
             Route::get('/{id}', 'BooksController@showBookById')->name('showBookById');
-            Route::get('/list/{id}', 'BooksController@showListById')->name('showListById');
-            //Route::get('/{id}/edit', 'BooksController@bookById')->name('bookById');
+            //Route::post('/{id}/edit', 'BooksController@bookById')->name('bookById');
         });
 
         // Albums
