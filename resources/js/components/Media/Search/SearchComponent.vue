@@ -4,6 +4,24 @@
             <div class="card">
                     
                 <div class="card-body">
+                    <div class="w-100 mb-3">
+                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/movies')">
+                            Movies
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/books')">
+                            Books
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/audiobooks')">
+                            Audiobooks
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/albums')">
+                            Albums
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/Games')">
+                            Games
+                        </button>
+                    </div>
+
                     <form action="" method="POST" class="w-100" id="create_permission"
                         v-on:submit.prevent="submitForm">
 
@@ -32,6 +50,21 @@
                             </div>
 
                         </div>
+
+                        <!-- Filters -->
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <a href="#filters-collapse" data-toggle="collapse"  role="button" aria-expanded="false"
+                                   aria-controls="filters-collapse"
+                                   class="float-right" id="search-filters-toggler">
+                                    filters
+                                </a>
+                            </div>
+                        </div>
+                        <div class="collapse" id="filters-collapse">
+                            <Filters v-on:update-filters="onUpdateFilters" v-bind:media-type="mediaType"></Filters>
+                        </div>
+
                         
                     </form>
                 </div>
@@ -50,6 +83,7 @@
 
 <script>
 import msg from 'toastr';
+import Filters from './Filters/Common';
 
 const mediaTypes = [
     'books', 'movies', 'audiobooks', 'albums', 'games',
@@ -57,20 +91,26 @@ const mediaTypes = [
 
 export default {
     name: 'App',
+    components: {
+        Filters: Filters,
+    },
     data: function () {
         return {
             isMediaTypeInvalid: false,
             mediaTypes: mediaTypes,
             mediaType: false,
-            query: this.$route.query.q
+            query: this.$route.query.q,
+            filters: {},
         }
     },
     mounted: function () {
-        for (let media_type of this.mediaTypes) {
-            if (this.$route.fullPath.match(media_type) !== null) {
-                this.mediaType = media_type;
-            }
-        }
+        this.setMediaTypeInSelect()
+    },
+    updated: function () {
+        this.setMediaTypeInSelect()
+    },
+    beforeMount: function () {
+        this.setMediaTypeInSelect();
     },
     methods: {
         submitForm: function () {
@@ -84,16 +124,58 @@ export default {
             this.isLoading = true;
             this.isMediaTypeInvalid = false;
 
+            this.redirect();
+        },
+        onUpdateFilters: function (filters) {
+            this.filters = filters;
+        },
+        redirect: function () {
+            let query = {
+                q: this.query,
+                ...this.getFilters(),
+            };
+
             this.$router.push({
                 name: this.mediaType,
                 path: '/'+this.mediaType,
-                query: {
-                    q: this.query,
-                },
+                query: query,
                 params: {
                     q: this.query,
                 },
             });
+        },
+        getFilters: function () {
+            let filters = {};
+
+            for (let filter in this.filters) {
+                switch (filter) {
+                    case 'status':
+                        if (this.filters['status'].active === true) {
+                            filters['status_active'] = true;
+                        }
+
+                        if (this.filters['status'].inactive === true) {
+                            filters['status_inactive'] = true;
+                        }
+                        break;
+                }
+            }
+
+            return filters;
+        },
+        setMediaTypeInSelect: function () {
+            for (let media_type of this.mediaTypes) {
+                if (this.$route.fullPath.match(media_type) !== null) {
+                    this.mediaType = media_type;
+                }
+            }
+        },
+    },
+    watch: {
+        mediaType: function () {
+            if (this.$route.fullPath.match(this.mediaType) === null) {
+                this.redirect()
+            }
         },
     },
 }

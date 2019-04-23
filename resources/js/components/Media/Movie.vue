@@ -11,7 +11,7 @@
 
                         {{ movie.title }}
 
-                        <button class="btn btn-outline-warning float-right" v-on:click="editMovie">edit</button>
+                        <button class="btn btn-outline-info float-right" v-on:click="editMovie">edit</button>
                     </div>
 <!--                    <img class="card-img-top mx-auto" src="img/no_product_image.png"-->
 <!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->

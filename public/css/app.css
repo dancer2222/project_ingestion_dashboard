@@ -16671,6 +16671,18 @@ header .form-inline .search-form input[type=text] {
   padding: 10px 221px 10px 15px !important;
 }
 
+#search-filters-toggler {
+  color: #403d44;
+  font-weight: 500;
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
+}
+
+#search-filters-toggler:hover {
+  -webkit-text-decoration-style: dotted;
+          text-decoration-style: dotted;
+}
+
 .loader {
   height: 2px;
   width: 100%;

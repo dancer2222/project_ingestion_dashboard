@@ -12,4 +12,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-.idea
+.idea/
+storage/debugbar/
+public/js/app.js

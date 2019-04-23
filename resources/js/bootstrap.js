@@ -1,5 +1,6 @@
 
 window._ = require('lodash');
+window.toastr = require('toastr');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -21,6 +22,19 @@ try {
  */
 
 window.axios = require('axios');
+
+// Axios. Unauthorized global handler
+window.axios.interceptors.response.use((response) => {
+    return response;
+}, (error) => {
+    if (error.response.status === 401) {
+        console.log('Unauthorized action.');
+        window.toastr.error('Click here to log in or <b>reload</b> the page', 'Your session is expired.', {
+            timeOut: 15000,
+            onclick: () => location.reload(),
+        });
+    }
+});
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
