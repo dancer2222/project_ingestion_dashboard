@@ -14,21 +14,25 @@
                 <table class="table table-hover" v-if="movies.total !== null && movies.total > 0">
                     <thead class="thead-dark">
                         <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">MA release date</th>
-                        <th scope="col">Status</th>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col" :style="{whiteSpace: 'nowrap'}">MA release date</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="movie in movies.data">
                             <th scope="row">{{movie.id}}</th>
-                            <td>
+                            <td :style="{whiteSpace: 'nowrap'}">
                                 <router-link :to="{ name: 'movie', params: { id: movie.id }}">
                                     {{ movie.title }}
                                 </router-link>
                             </td>
-                            <td>{{ movie.ma_release_date }}</td>
+                            <td :style="{fontSize: '10px'}">
+                                {{ movie.description.substring(0, 70) }}...
+                            </td>
+                            <td :style="{whiteSpace: 'nowrap'}">{{ movie.ma_release_date }}</td>
                             <td>
                                 <span v-bind:class="['badge', movie.status === 'active' ? 'badge-success' : 'badge-danger']">{{ movie.status }}</span>
                             </td>
@@ -82,6 +86,9 @@ export default {
     },
     mounted: function () {
         this.fetchData()
+    },
+    updated: function () {
+        this.page = this.$route.query.page ? this.$route.query.page : 1;
     },
     methods: {
         fetchData: function () {
