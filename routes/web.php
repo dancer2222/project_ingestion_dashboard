@@ -58,6 +58,19 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/permissions/create', 'Roles\\PermissionsController@store')->name('permissions.store');
     });
 
+    // Stats routes
+    Route::namespace('Stats')->name('stats.')->prefix('stats')->group(function () {
+        // Movies
+        Route::name('movies')->prefix('/movies')->group(function () {
+            Route::get('/total_count', 'MoviesStatsController@countAll')->name('total_count');
+        });
+
+        // Books
+        Route::name('books')->prefix('/books')->group(function () {
+            Route::get('/total_count', 'BooksStatsController@countAll')->name('total_count');
+        });
+    });
+
     Route::namespace('Media')->group(function () {
         // Search
         Route::get('/search', 'SearchController@index')->name('search');

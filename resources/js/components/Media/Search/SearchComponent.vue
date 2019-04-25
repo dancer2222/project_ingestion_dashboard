@@ -98,7 +98,7 @@ export default {
         return {
             isMediaTypeInvalid: false,
             mediaTypes: mediaTypes,
-            mediaType: false,
+            mediaType: '',
             query: this.$route.query.q,
             filters: {},
         }

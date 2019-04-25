@@ -36,7 +36,7 @@
             mediaType: {
                 type: String,
                 validator: function (mt) {
-                    return ['books', 'movies', 'audiobooks', 'albums', 'games'].indexOf(mt) !== -1;
+                    return ['', 'books', 'movies', 'audiobooks', 'albums', 'games'].indexOf(mt) !== -1;
                 }
             },
         },
