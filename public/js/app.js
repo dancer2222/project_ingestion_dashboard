@@ -2420,6 +2420,8 @@ var mediaTypes = ['books', 'movies', 'audiobooks', 'albums', 'games'];
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
+/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(toastr__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2493,13 +2495,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       editIndex: null,
       originalData: null,
       items: [],
-      licensor: null
+      licensor: null,
+      submitData: true
     };
   },
   methods: {
@@ -2508,7 +2512,8 @@ __webpack_require__.r(__webpack_exports__);
       this.items.push({
         title: '',
         year: '',
-        filename: ''
+        filename: '',
+        saved: false
       });
       this.editIndex = this.items.length - 1;
     },
@@ -2518,6 +2523,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     remove: function remove(item, index) {
       this.items.splice(index, 1);
+      this.editIndex = null;
     },
     save: function save(item) {
       var _this = this;
@@ -2526,7 +2532,6 @@ __webpack_require__.r(__webpack_exports__);
         this.editIndex = 1;
         this.originalData = 1;
       } else {
-        console.log(item.filename);
         axios.post('/ingestion/movie/awsCheck', {
           body: item.filename,
           folder: this.licensor
@@ -2534,20 +2539,35 @@ __webpack_require__.r(__webpack_exports__);
           if (response.data !== true) {
             _this.editIndex = 1;
             _this.originalData = 1;
+            item.saved = false;
+            toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error('Movie with file name - ' + item.filename + ' - Not found in aws bucket');
           } else {
             _this.originalData = null;
             _this.editIndex = null;
+            item.saved = true;
+            toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success('Movie with file name' + item.filename + ' - present in aws bucket');
           }
         });
       }
     },
     submit: function submit() {
-      axios.post('/ingestion/movie/awsCopy', {
-        body: this.items,
-        folder: this.licensor
-      }).then(function (response) {
-        console.log(response.data);
-      });
+      var i;
+
+      for (i = 0; i < this.items.length; i++) {
+        if (this.items[i].saved === false) {
+          this.submitData = false;
+          toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error('Movie with file name - ' + this.items[i].filename + ' - Not found in aws bucket');
+        }
+      }
+
+      if (this.submitData === true) {
+        axios.post('/ingestion/movie/awsCopy', {
+          body: this.items,
+          folder: this.licensor
+        }).then(function (response) {
+          toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success(response.data.message);
+        });
+      }
     }
   }
 });
@@ -39610,7 +39630,7 @@ var render = function() {
         ? _c(
             "button",
             { staticClass: "btn btn-sm btn-secondary", on: { click: _vm.add } },
-            [_vm._v("Add\n            item\n        ")]
+            [_vm._v("\n            Add item\n        ")]
           )
         : _vm._e()
     ]),
@@ -55445,8 +55465,8 @@ jQuery(document).ready(function ($) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/sega/hyuna/dashboard/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/sega/hyuna/dashboard/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

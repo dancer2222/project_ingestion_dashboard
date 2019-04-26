@@ -59,8 +59,8 @@
         </table>
 
         <div class="col-3 offset-9 text-right my-3">
-            <button @click="add" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">Add
-                item
+            <button @click="add" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">
+                Add item
             </button>
         </div>
         <div class="col-3 offset-9 text-right my-3">
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+    import toastr from 'toastr';
     export default {
         data() {
             return {
@@ -79,13 +80,14 @@
                 originalData: null,
                 items: [],
                 licensor: null,
+                submitData: true,
             }
         },
         methods: {
 
             add() {
                 this.originalData = null
-                this.items.push({title: '', year: '', filename: ''})
+                this.items.push({title: '', year: '', filename: '', saved: false})
                 this.editIndex = this.items.length - 1
             },
 
@@ -96,32 +98,49 @@
 
             remove(item, index) {
                 this.items.splice(index, 1)
+                this.editIndex = null
             },
 
             save(item) {
                 if (item.title == '' || item.year == '' || item.filename == '') {
                     this.editIndex = 1
                     this.originalData = 1
+
                 } else {
-                    console.log(item.filename);
                     axios.post('/ingestion/movie/awsCheck', {body: item.filename, folder: this.licensor})
                         .then((response) => {
                             if (response.data !== true) {
                                 this.editIndex = 1
                                 this.originalData = 1
+                                item.saved = false
+                                toastr.error('Movie with file name - '+ item.filename + ' - Not found in aws bucket');
+
                             } else {
                                 this.originalData = null
                                 this.editIndex = null
+                                item.saved = true
+                                toastr.success('Movie with file name' + item.filename + ' - present in aws bucket');
                             }
                         });
                 }
             },
 
             submit() {
-                axios.post('/ingestion/movie/awsCopy', {body: this.items, folder: this.licensor})
-                    .then((response) => {
-                        console.log(response.data);
-                    });
+                let i;
+                for (i=0; i<this.items.length;i++) {
+                    if(this.items[i].saved === false) {
+                        this.submitData = false;
+                        toastr.error('Movie with file name - '+ this.items[i].filename + ' - Not found in aws bucket');
+                    }
+                }
+
+                if (this.submitData === true) {
+                    axios.post('/ingestion/movie/awsCopy', {body: this.items, folder: this.licensor})
+                        .then((response) => {
+                            toastr.success(response.data.message);
+                        });
+                }
+
             }
         },
     }
