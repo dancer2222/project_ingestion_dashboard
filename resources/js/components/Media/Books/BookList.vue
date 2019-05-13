@@ -24,7 +24,7 @@
                     <tbody>
                     <tr v-for="book in books.data"
                         :style="{cursor:'pointer'}"
-                        @click = "getBookData">
+                        @click = "getBookData(book.id)">
                         <th scope="row">{{ book.id }}</th>
                         <td>{{ book.title }}</td>
                         <td>{{ book.isbn}}</td>
@@ -73,7 +73,8 @@
             }
         },
         methods: {
-            getBookData: function () {
+            getBookData: function (bookId) {
+                this.q = bookId;
                 this.$router.push({name: 'booksData', path:this.mediaType + '/' + this.q, params: { id: this.q }});
             },
             changePage: function (page) {
