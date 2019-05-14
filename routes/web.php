@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Albums
         Route::name('albums.')->prefix('/albums')->group(function () {
             Route::get('/', 'AlbumsController@index')->name('index');
+            Route::get('/{id}', 'AlbumsController@show')->name('show');
+            Route::post('/{id}', 'AlbumsController@update')->name('update');
         });
 
         // Audiobooks
