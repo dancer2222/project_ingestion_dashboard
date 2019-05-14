@@ -82,7 +82,7 @@ class BooksController extends Controller
 
             if (!$book) {
                 $status = false;
-                $message = 'An error occurred while saving the movie';
+                $message = 'An error occurred while saving the book';
             }
         }
 
