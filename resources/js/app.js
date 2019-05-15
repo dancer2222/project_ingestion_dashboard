@@ -8,7 +8,6 @@
 require('./bootstrap');
 require('jquery-match-height');
 require('./theme/main');
-require('axios');
 window.Vue = require('vue');
 
 import VueRouter from 'vue-router'

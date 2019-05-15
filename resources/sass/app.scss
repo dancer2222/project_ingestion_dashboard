@@ -53,6 +53,16 @@ header .form-inline .search-form input[type="text"] {
   padding: 10px 221px 10px 15px !important;
 }
 
+// Search
+#search-filters-toggler {
+  color: #403d44;
+  font-weight: 500;
+  text-decoration-line: underline;
+}
+
+#search-filters-toggler:hover {
+  text-decoration-style: dotted;
+}
 
 // Search loader
 .loader {

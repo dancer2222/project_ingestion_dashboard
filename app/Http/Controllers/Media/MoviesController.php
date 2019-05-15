@@ -11,21 +11,16 @@ class MoviesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Movie $movie
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Movie $movie)
     {
         $message = '';
         $status = '';
 
         try {
-            $movieQuery = Movie::query();
-
-            if ($request->get('q')) {
-                $movieQuery->where('id', $request->get('q', ''));
-            }
-
-            $movies = $movieQuery->paginate();
+            $movies = $movie->search();
         } catch (\Exception $e) {
             $message = "There're no movies by this query.";
             $movies = [];

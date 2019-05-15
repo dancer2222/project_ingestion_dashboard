@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Media;
 
 use Illuminate\Http\Request;
+use App\Models\Book;
 use App\Http\Controllers\Controller;
-use App\Models\Album;
 
-class AlbumsController extends Controller
+class BooksController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,18 +19,18 @@ class AlbumsController extends Controller
         $status = '';
 
         try {
-            $albumsQuery = Album::query();
+            $booksQuery = Book::query();
             if ($request->get('q')) {
-                $albumsQuery ->select('id', 'title', 'description', 'status')->where('id', $request->get('q', ''));
+                $booksQuery ->select('id', 'title', 'isbn', 'status')->where('id', $request->get('q', ''));
             }
-            $albums = $albumsQuery->paginate();
+            $books = $booksQuery->paginate();
         } catch (\Exception $e) {
-            $message = "There're no albums by this query.";
-            $albums = [];
+            $message = "There're no books by this query.";
+            $books = [];
         }
 
         return response()->json([
-            'albums' => $albums,
+            'books' => $books,
             'status' => $status,
             'message' => $message
         ]);
@@ -55,7 +55,7 @@ class AlbumsController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Album::find((int)$id));
+        return response()->json(Book::find((int)$id));
     }
 
     /**
@@ -69,7 +69,7 @@ class AlbumsController extends Controller
     {
         //
         $status = true;
-        $message = "Album ($id) successfully updated.";
+        $message = "Book ($id) successfully updated.";
         $fieldsNeedToBeUpdated = [];
 
         foreach ($request->all() as $key => $value) {
@@ -77,12 +77,12 @@ class AlbumsController extends Controller
         }
 
         if ($fieldsNeedToBeUpdated) {
-            $album = Album::where('id', $id)
+            $book = Book::where('id', $id)
                 ->update($fieldsNeedToBeUpdated);
 
-            if (!$album) {
+            if (!$book) {
                 $status = false;
-                $message = 'An error occurred while saving the album';
+                $message = 'An error occurred while saving the book';
             }
         }
 
