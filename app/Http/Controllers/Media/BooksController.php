@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Media;
 
+
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Http\Controllers\Controller;
+use Managers\BookImageManager;
+
 
 class BooksController extends Controller
 {
@@ -13,17 +16,14 @@ class BooksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+
+    public function index(Book $book)
     {
         $message = '';
         $status = '';
 
         try {
-            $booksQuery = Book::query();
-            if ($request->get('q')) {
-                $booksQuery ->select('id', 'title', 'isbn', 'status')->where('id', $request->get('q', ''));
-            }
-            $books = $booksQuery->paginate();
+            $books = $book->search();
         } catch (\Exception $e) {
             $message = "There're no books by this query.";
             $books = [];
@@ -35,6 +35,7 @@ class BooksController extends Controller
             'message' => $message
         ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -53,9 +54,20 @@ class BooksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+//    public function show($id)
+//    {
+//        return response()->json(Book::find((int)$id));
+//    }
+
     public function show($id)
     {
-        return response()->json(Book::find((int)$id));
+        $book = Book::find((int)$id);
+
+        if($book && $book->num_of_images > 0){
+            $book->coverUrl = BookImageManager::getCoverURL($book->isbn);
+        }
+
+        return response()->json($book);
     }
 
     /**
@@ -102,4 +114,5 @@ class BooksController extends Controller
     {
         //
     }
+
 }
