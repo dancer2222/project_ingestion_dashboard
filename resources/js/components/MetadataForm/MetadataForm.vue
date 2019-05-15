@@ -4,7 +4,7 @@
             <div class="input-group-prepend">
                 <label class="input-group-text" for="inputGroupSelect01">Select licensor folder name</label>
             </div>
-            <select class="custom-select" id="inputGroupSelect01" v-model="licensor">
+            <select class="custom-select" id="inputGroupSelect01" v-model="licensor" v-on:change="onChange">
                 <option>ECHELON</option>
                 <option>GRAVITAS</option>
                 <option>MVD</option>
@@ -14,110 +14,134 @@
             </select>
         </div>
 
-        <table class="table table-bordered table-responsive" v-if="licensor !== null">
+        <div class="row justify-content-center" v-if="licensor !== null">
+            <div class="card-body">
+                <div v-if="success != ''" class="alert alert-info" role="alert">
+                    {{success}}
+                </div>
+                <form enctype="multipart/form-data">
+                    <strong>Choose file:</strong>
+                    <input type="file" class="form-control" v-on:change="onChange">
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover" v-if="items !== null">
             <thead class="thead-light">
             <tr>
-                <th width="1">#</th>
-                <th width="10%">Title</th>
-                <th width="10%">Year</th>
-                <th width="10%">File name</th>
-                <th width="150">Action</th>
+                <th width="1">Title</th>
+                <th width="1">Year</th>
+                <th width="1">Source filename</th>
+                <th width="1">Present in AWS</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in items" :key="index">
-                <td>{{ index + 1 }}</td>
+            <tr v-for="movie in items">
                 <td>
-                    <span v-if="editIndex !== index">{{ item.title }}</span>
-                    <span v-if="editIndex === index">
-                        <input class="form-control form-control-m" v-model="item.title">
-                    </span>
+                    <span>{{ movie.title }}</span>
                 </td>
                 <td>
-                    <span v-if="editIndex !== index">{{ item.year }}</span>
-                    <span v-if="editIndex === index">
-                        <input class="form-control form-control-m" v-model="item.year">
-                    </span>
+                    <span>{{ movie.year }}</span>
                 </td>
                 <td>
-                    <span v-if="editIndex !== index">{{ item.filename }}</span>
-                    <span v-if="editIndex === index">
-                      <input class="form-control form-control-m" v-model="item.filename">
-                    </span>
+                    <span>{{ movie.src }}</span>
                 </td>
                 <td>
-                    <span v-if="editIndex !== index">
-                      <button @click="edit(item, index)" class="btn btn-sm btn-outline-secondary mr-2">Edit</button>
-                      <button @click="remove(item, index)" class="btn btn-sm btn-outline-secondary mr-2">Remove</button>
+                    <span v-if="movie.saved === true">
+                        <img v-bind:src="pictureSuccess" v-bind:width="width"
+                             v-bind:height="height">
                     </span>
                     <span v-else>
-                      <button class="btn btn-sm btn-outline-secondary mr-2" @click="save(item)">Save</button>
+                        <img v-bind:src="pictureError" v-bind:width="width" v-bind:height="height">
                     </span>
                 </td>
+
             </tr>
             </tbody>
         </table>
-
-        <div class="col-3 offset-9 text-right my-3">
-            <button @click="add" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">Add
-                item
+        <center>
+            <button class="btn btn-lg btn-outline-success" v-if="submitData !== false && items !== null"
+                    @click="submit">Start ingestion
             </button>
-        </div>
-        <div class="col-3 offset-9 text-right my-3">
-            <button @click="submit" class="btn btn-sm btn-secondary" v-if="licensor !== null && editIndex === null">
-                Submit
-            </button>
-        </div>
+        </center>
     </div>
 </template>
 
 <script>
+    import toastr from 'toastr';
+
     export default {
         data() {
             return {
-                editIndex: null,
-                originalData: null,
-                items: [],
+                file: '',
+                success: '',
+                items: null,
+                pictureError: 'img/error.svg',
+                pictureSuccess: 'img/success.svg',
+                width: '50px',
+                height: '50px',
+                submitData: true,
                 licensor: null,
-            }
+            };
         },
         methods: {
+            onChange(e) {
 
-            add() {
-                this.originalData = null
-                this.items.push({title: '', year: '', filename: ''})
-                this.editIndex = this.items.length - 1
-            },
+                if (e.target.files !== undefined) {
+                    this.file = e.target.files[0];
+                }
 
-            edit(item, index) {
-                this.originalData = Object.assign({}, item)
-                this.editIndex = index
-            },
+                if (this.file !== '') {
+                    e.preventDefault();
 
-            remove(item, index) {
-                this.items.splice(index, 1)
-            },
+                    let formData = new FormData();
+                    formData.append("file", this.file);
 
-            save(item) {
-                if (item.title == '' || item.year == '' || item.filename == '') {
-                    this.editIndex = 1
-                    this.originalData = 1
-                } else {
-                    axios.post('/ingestion/movie/awsCheck', {body: item.title, folder: this.licensor})
-                        .then((response) => {
-                            if (response.data !== true) {
-                                this.editIndex = 1
-                                this.originalData = 1
-                            } else {
-                                this.originalData = null
-                                this.editIndex = null
-                            }
+                    axios.post('/ingestion/movie/convertMetadata', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(({data}) => {
+                        this.items = data.items;
+                        this.chekInAwsBucket();
+                    })
+                        .catch(function (error) {
+                            toastr.error(error);
                         });
                 }
             },
             submit() {
-                console.log(this.items);
-            }
-        },
+                if (this.submitData === true) {
+                    axios.post('/ingestion/movie/ombdApi', {body: this.items})
+                        .then((response) => {
+                            console.log(response.data)
+                            toastr.success('Everything OK');
+                        });
+                }
+            },
+            chekInAwsBucket() {
+                let i;
+                for (i = 0; i < this.items.length; i++) {
+                    if (this.items[i].title == '') {
+                        this.items.splice(i, 1)
+                    }
+                }
+
+                for (let obj in this.items) {
+                    axios.post('/ingestion/movie/awsCheck', {body: this.items[obj].src, folder: this.licensor})
+                        .then((response) => {
+                            if (response.data !== true) {
+                                Vue.set(this.items[obj], 'saved', false)
+                                this.submitData = false
+                                toastr.error(this.items[obj].src + ' - Not found in aws bucket');
+                            } else {
+                                Vue.set(this.items[obj], 'saved', true)
+                                this.submitData = true
+                                toastr.success(this.items[obj].src + ' - present in aws bucket');
+                            }
+                        });
+                }
+            },
+        }
     }
 </script>
