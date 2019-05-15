@@ -2491,82 +2491,87 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      editIndex: null,
-      originalData: null,
-      items: [],
-      licensor: null,
-      submitData: true
+      file: '',
+      success: '',
+      items: null,
+      pictureError: 'img/error.svg',
+      pictureSuccess: 'img/success.svg',
+      width: '50px',
+      height: '50px',
+      submitData: true,
+      licensor: null
     };
   },
   methods: {
-    add: function add() {
-      this.originalData = null;
-      this.items.push({
-        title: '',
-        year: '',
-        filename: '',
-        saved: false
-      });
-      this.editIndex = this.items.length - 1;
-    },
-    edit: function edit(item, index) {
-      this.originalData = Object.assign({}, item);
-      this.editIndex = index;
-    },
-    remove: function remove(item, index) {
-      this.items.splice(index, 1);
-      this.editIndex = null;
-    },
-    save: function save(item) {
+    onChange: function onChange(e) {
       var _this = this;
 
-      if (item.title == '' || item.year == '' || item.filename == '') {
-        this.editIndex = 1;
-        this.originalData = 1;
-      } else {
-        axios.post('/ingestion/movie/awsCheck', {
-          body: item.filename,
-          folder: this.licensor
-        }).then(function (response) {
-          if (response.data !== true) {
-            _this.editIndex = 1;
-            _this.originalData = 1;
-            item.saved = false;
-            toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error('Movie with file name - ' + item.filename + ' - Not found in aws bucket');
-          } else {
-            _this.originalData = null;
-            _this.editIndex = null;
-            item.saved = true;
-            toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success('Movie with file name' + item.filename + ' - present in aws bucket');
+      if (e.target.files !== undefined) {
+        this.file = e.target.files[0];
+      }
+
+      if (this.file !== '') {
+        e.preventDefault();
+        var formData = new FormData();
+        formData.append("file", this.file);
+        axios.post('/ingestion/movie/convertMetadata', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
           }
+        }).then(function (_ref) {
+          var data = _ref.data;
+          _this.items = data.items;
+
+          _this.chekInAwsBucket();
+        }).catch(function (error) {
+          toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error(error);
         });
       }
     },
     submit: function submit() {
+      if (this.submitData === true) {
+        axios.post('/ingestion/movie/ombdApi', {
+          body: this.items
+        }).then(function (response) {
+          console.log(response.data);
+          toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success('Everything OK');
+        });
+      }
+    },
+    chekInAwsBucket: function chekInAwsBucket() {
+      var _this2 = this;
+
       var i;
 
       for (i = 0; i < this.items.length; i++) {
-        if (this.items[i].saved === false) {
-          this.submitData = false;
-          toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error('Movie with file name - ' + this.items[i].filename + ' - Not found in aws bucket');
+        if (this.items[i].title == '') {
+          this.items.splice(i, 1);
         }
       }
 
-      if (this.submitData === true) {
-        axios.post('/ingestion/movie/awsCopy', {
-          body: this.items,
-          folder: this.licensor
+      var _loop = function _loop(obj) {
+        axios.post('/ingestion/movie/awsCheck', {
+          body: _this2.items[obj].src,
+          folder: _this2.licensor
         }).then(function (response) {
-          toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success(response.data.message);
+          if (response.data !== true) {
+            Vue.set(_this2.items[obj], 'saved', false);
+            _this2.submitData = false;
+            toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error(_this2.items[obj].src + ' - Not found in aws bucket');
+          } else {
+            Vue.set(_this2.items[obj], 'saved', true);
+            _this2.submitData = true;
+            toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success(_this2.items[obj].src + ' - present in aws bucket');
+          }
         });
+      };
+
+      for (var obj in this.items) {
+        _loop(obj);
       }
     }
   }
@@ -39419,235 +39424,151 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "input-group-prepend" }, [
-      _vm._m(0),
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("div", { staticClass: "input-group-prepend" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.licensor,
+                expression: "licensor"
+              }
+            ],
+            staticClass: "custom-select",
+            attrs: { id: "inputGroupSelect01" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.licensor = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.onChange
+              ]
+            }
+          },
+          [
+            _c("option", [_vm._v("ECHELON")]),
+            _vm._v(" "),
+            _c("option", [_vm._v("GRAVITAS")]),
+            _vm._v(" "),
+            _c("option", [_vm._v("MVD")]),
+            _vm._v(" "),
+            _c("option", [_vm._v("NAVI")]),
+            _vm._v(" "),
+            _c("option", [_vm._v("RSQUARED")]),
+            _vm._v(" "),
+            _c("option", [_vm._v("SCREENMEDIA")])
+          ]
+        )
+      ]),
       _vm._v(" "),
-      _c(
-        "select",
-        {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.licensor,
-              expression: "licensor"
-            }
-          ],
-          staticClass: "custom-select",
-          attrs: { id: "inputGroupSelect01" },
-          on: {
-            change: function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
+      _vm.licensor !== null
+        ? _c("div", { staticClass: "row justify-content-center" }, [
+            _c("div", { staticClass: "card-body" }, [
+              _vm.success != ""
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "alert alert-info",
+                      attrs: { role: "alert" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(_vm.success) +
+                          "\n            "
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("form", { attrs: { enctype: "multipart/form-data" } }, [
+                _c("strong", [_vm._v("Choose file:")]),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: { type: "file" },
+                  on: { change: _vm.onChange }
                 })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.licensor = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            }
-          }
-        },
-        [
-          _c("option", [_vm._v("ECHELON")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("GRAVITAS")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("MVD")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("NAVI")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("RSQUARED")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("SCREENMEDIA")])
-        ]
-      )
-    ]),
-    _vm._v(" "),
-    _vm.licensor !== null
-      ? _c("table", { staticClass: "table table-bordered table-responsive" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.items, function(item, index) {
-              return _c("tr", { key: index }, [
-                _c("td", [_vm._v(_vm._s(index + 1))]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm.editIndex !== index
-                    ? _c("span", [_vm._v(_vm._s(item.title))])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editIndex === index
-                    ? _c("span", [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: item.title,
-                              expression: "item.title"
-                            }
-                          ],
-                          staticClass: "form-control form-control-m",
-                          domProps: { value: item.title },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(item, "title", $event.target.value)
-                            }
-                          }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm.editIndex !== index
-                    ? _c("span", [_vm._v(_vm._s(item.year))])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editIndex === index
-                    ? _c("span", [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: item.year,
-                              expression: "item.year"
-                            }
-                          ],
-                          staticClass: "form-control form-control-m",
-                          domProps: { value: item.year },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(item, "year", $event.target.value)
-                            }
-                          }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm.editIndex !== index
-                    ? _c("span", [_vm._v(_vm._s(item.filename))])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editIndex === index
-                    ? _c("span", [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: item.filename,
-                              expression: "item.filename"
-                            }
-                          ],
-                          staticClass: "form-control form-control-m",
-                          domProps: { value: item.filename },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(item, "filename", $event.target.value)
-                            }
-                          }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm.editIndex !== index
-                    ? _c("span", [
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn btn-sm btn-outline-secondary mr-2",
-                            on: {
-                              click: function($event) {
-                                return _vm.edit(item, index)
-                              }
-                            }
-                          },
-                          [_vm._v("Edit")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn btn-sm btn-outline-secondary mr-2",
-                            on: {
-                              click: function($event) {
-                                return _vm.remove(item, index)
-                              }
-                            }
-                          },
-                          [_vm._v("Remove")]
-                        )
-                      ])
-                    : _c("span", [
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn btn-sm btn-outline-secondary mr-2",
-                            on: {
-                              click: function($event) {
-                                return _vm.save(item)
-                              }
-                            }
-                          },
-                          [_vm._v("Save")]
-                        )
-                      ])
-                ])
               ])
-            }),
-            0
-          )
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-3 offset-9 text-right my-3" }, [
-      _vm.licensor !== null && _vm.editIndex === null
-        ? _c(
-            "button",
-            { staticClass: "btn btn-sm btn-secondary", on: { click: _vm.add } },
-            [_vm._v("\n            Add item\n        ")]
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-3 offset-9 text-right my-3" }, [
-      _vm.licensor !== null && _vm.editIndex === null
-        ? _c(
-            "button",
-            {
-              staticClass: "btn btn-sm btn-secondary",
-              on: { click: _vm.submit }
-            },
-            [_vm._v("\n            Submit\n        ")]
-          )
-        : _vm._e()
-    ])
-  ])
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.items !== null
+        ? _c("table", { staticClass: "table table-bordered table-hover" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.items, function(movie) {
+                return _c("tr", [
+                  _c("td", [_c("span", [_vm._v(_vm._s(movie.title))])]),
+                  _vm._v(" "),
+                  _c("td", [_c("span", [_vm._v(_vm._s(movie.year))])]),
+                  _vm._v(" "),
+                  _c("td", [_c("span", [_vm._v(_vm._s(movie.src))])]),
+                  _vm._v(" "),
+                  _c("td", [
+                    movie.saved === true
+                      ? _c("span", [
+                          _c("img", {
+                            attrs: {
+                              src: _vm.pictureSuccess,
+                              width: _vm.width,
+                              height: _vm.height
+                            }
+                          })
+                        ])
+                      : _c("span", [
+                          _c("img", {
+                            attrs: {
+                              src: _vm.pictureError,
+                              width: _vm.width,
+                              height: _vm.height
+                            }
+                          })
+                        ])
+                  ])
+                ])
+              }),
+              0
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("center", [
+        _vm.submitData !== false && _vm.items !== null
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-lg btn-outline-success",
+                on: { click: _vm.submit }
+              },
+              [_vm._v("Start ingestion\n        ")]
+            )
+          : _vm._e()
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -39671,15 +39592,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-light" }, [
       _c("tr", [
-        _c("th", { attrs: { width: "1" } }, [_vm._v("#")]),
+        _c("th", { attrs: { width: "1" } }, [_vm._v("Title")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "10%" } }, [_vm._v("Title")]),
+        _c("th", { attrs: { width: "1" } }, [_vm._v("Year")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "10%" } }, [_vm._v("Year")]),
+        _c("th", { attrs: { width: "1" } }, [_vm._v("Source filename")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "10%" } }, [_vm._v("File name")]),
-        _vm._v(" "),
-        _c("th", { attrs: { width: "150" } }, [_vm._v("Action")])
+        _c("th", { attrs: { width: "1" } }, [_vm._v("Present in AWS")])
       ])
     ])
   }

@@ -43,16 +43,4 @@ class AwsController extends Controller
 
         return json_encode($result);
     }
-
-    public function copyDataToAwsBucket(Request $request) {
-
-//        $result = $this->s3->copyObject([
-//            'Bucket' => 'content-ingestion-brightcove',
-//            'Key' => 'TEST/dancer.dat',
-//            'CopySource' => 'book-service-hyuna/books/9781460303436/9781460303436.dat',
-//        ]);
-
-//        return $result;
-        return 'true';
-    }
 }
