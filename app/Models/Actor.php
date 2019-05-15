@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Actor extends Model
+{
+    /**
+     * Connection name
+     *
+     * @var string
+     */
+    protected $connection = 'content';
+
+    /**
+     * @var string
+     */
+    protected $table = 'actors';
+    public $timestamps = false;
+}
