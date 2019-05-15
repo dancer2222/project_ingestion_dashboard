@@ -9,7 +9,9 @@
                     <div class="card-header">
                         <!--<button class="btn btn-outline-dark float-left mr-3" v-on:click="$router.back()">Back</button>-->
 
-                        <strong>Book</strong> ISBN:{{book.isbn}}
+                        <strong>Book</strong>
+                        <span v-if="book.isbn">ISBN:{{book.isbn}}</span>
+                        <span v-else>{{book.title}}</span>
 
                         <div class = 'float-right'>
                             <span><strong >Status:</strong></span>
@@ -20,9 +22,14 @@
                     <!--                    <img class="card-img-top mx-auto" src="img/no_product_image.png"-->
                     <!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->
 
-                    <div class="card-body">
-                        <button class="btn btn-outline-warning float-right" v-on:click="editBook">edit</button>
+                    <div class="card-body" v-if="book">
+
+                        <button class="btn btn-outline-info float-right" v-on:click="editBook">edit</button>
+                        <div >
+                        <img v-if="book.num_of_images > 0" v-bind:src="book.coverUrl" alt="Book cover"/>
+                    </div>
                         <div class="row">
+
                             <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="book" v-for="(value, key) in book">
                                 <b>{{ key }}</b> - {{ value }}
                             </p>
