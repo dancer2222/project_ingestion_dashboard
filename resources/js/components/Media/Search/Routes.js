@@ -9,6 +9,10 @@ import Albums from '../Albums/Albums'
 import AlbumsList from '../Albums/AlbumsList'
 import Album from '../Albums/Album'
 import AlbumEdit from '../Albums/AlbumEdit'
+import Games from "../Games/Games";
+import GamesList from "../Games/GamesList";
+import Game from "../Games/Game";
+import GameEdit from "../Games/GameEdit";
 
 export default [
     // Movies
@@ -29,6 +33,14 @@ export default [
             {path: '', name: 'albums', component: AlbumsList},
             {path: ':id', name:'albumsData', component: Album},
             {path: ':id/edit', name:'albums_edit', component: AlbumEdit},
+        ]
+    },
+    // Games
+    { path: '/games', component: Games,
+        children: [
+            {path: '', name: 'games', component: GamesList},
+            {path: ':id', name:'gamesData', component: Game},
+            {path: ':id/edit', name:'games_edit', component: GameEdit},
         ]
     },
 ]
