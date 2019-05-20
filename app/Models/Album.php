@@ -18,4 +18,9 @@ class Album extends Model
      */
     protected $table = 'music_album';
     public $timestamps = false;
+    protected $fillable = ['id'];
+
+    public function getIdAttribute($value){
+        return (string)$value;
+    }
 }
