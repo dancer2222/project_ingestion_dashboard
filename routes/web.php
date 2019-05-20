@@ -96,6 +96,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Games
         Route::name('games.')->prefix('/games')->group(function () {
             Route::get('/', 'GamesController@index')->name('index');
+            Route::get('/{id}', 'GamesController@show')->name('show');
+            Route::post('/{id}', 'GamesController@update')->name('update');
         });
     });
     // Auth::logout();

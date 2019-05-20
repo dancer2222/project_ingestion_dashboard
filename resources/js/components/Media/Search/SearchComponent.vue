@@ -17,7 +17,7 @@
                         <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/albums')">
                             Albums
                         </button>
-                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/Games')">
+                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/games')">
                             Games
                         </button>
                     </div>
