@@ -51,6 +51,7 @@
                     .then(function (response) {
                         if (Object.keys(response.data).length > 0) {
                             self.book = response.data;
+                            Vue.delete(self.book, 'coverUrl');
                             self.bookCopy = {
                                 ...self.book
                             };
@@ -78,7 +79,6 @@
                                 self.bookCopy = {
                                     ...self.book
                                 };
-
                                 toastr.success(response.data.message);
                             } else {
                                 toastr.error(response.data.message);
