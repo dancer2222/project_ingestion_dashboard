@@ -26,7 +26,7 @@
 
                         <button class="btn btn-outline-info float-right" v-on:click="editBook">edit</button>
                         <div >
-                            <img v-if="book.num_of_images > 0" v-bind:src="book.coverUrl" alt="Book cover"/>
+                            <img v-if="book.num_of_images > 0" v-bind:src="pictureURL" alt="Book cover"/>
                             <img v-else v-bind:src="pictureError" v-bind:width="200" v-bind:height="200" alt="No picture available">
                         </div>
                         <div class="row">
@@ -66,6 +66,7 @@
                 mediaType: 'books',
                 descriptionShow : false,
                 pictureError: 'img/image-not-found.jpeg',
+                pictureURL:'',
             }
         },
         methods: {
@@ -75,6 +76,8 @@
                     .then(function (response) {
                         if (Object.keys(response.data).length > 0) {
                             self.book = response.data;
+                            self.pictureURL = self.book.coverUrl;
+                            Vue.delete(self.book, 'coverUrl');
                         } else {
                             self.isError = true;
                         }
@@ -86,7 +89,7 @@
                 this.$router.push({
                     name: 'books_edit',
                     path: 'book',
-                    params: { book: this.book, fetchData: this.fetchData },
+                    params: { book: this.book},
                 })
             },
         },
