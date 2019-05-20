@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Media;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Album;
+use Managers\AlbumImageManager;
 
 class AlbumsController extends Controller
 {
@@ -55,7 +56,13 @@ class AlbumsController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Album::find((int)$id));
+        $album = Album::find((int)$id);
+
+        if($album && $album->num_of_images > 0){
+            $album->coverUrl = AlbumImageManager::getCoverURL($album->id, $album->title);
+        }
+
+        return response()->json($album);
     }
 
     /**
