@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Media;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Http\Controllers\Controller;
+use Managers\MovieImageManager;
 
+/**
+ * Class MoviesController
+ * @package App\Http\Controllers\Media
+ */
 class MoviesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param  Movie  $movie
      *
-     * @param Movie $movie
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Movie $movie)
@@ -45,14 +49,19 @@ class MoviesController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param $id
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        return response()->json(Movie::find($id));
+        $movie = Movie::find($id);
+
+        if($movie && $movie->num_of_images > 0){
+            $movie->coverUrl = MovieImageManager::getCoverURL($movie->id, $movie->title);
+        }
+
+        return response()->json($movie);
     }
 
     /**
