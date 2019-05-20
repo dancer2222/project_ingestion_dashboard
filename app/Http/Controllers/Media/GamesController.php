@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Media;
 use App\Models\Game;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Managers\GameImageManager;
 
 class GamesController extends Controller
 {
@@ -51,15 +52,20 @@ class GamesController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Game::find((int)$id));
+        $game = Game::find((int)$id);
+
+        if($game && $game->num_of_images > 0){
+            $game->coverUrl = GameImageManager::getCoverURL($game->id, $game->title);
+        }
+
+        return response()->json($game);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param  Request  $request
+     * @param $id
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
