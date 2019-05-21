@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Media;
 
+use App\Models\Music;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Album;
 use Managers\AlbumImageManager;
 
+/**
+ * Class AlbumsController
+ * @package App\Http\Controllers\Media
+ */
 class AlbumsController extends Controller
 {
     /**
@@ -58,11 +63,24 @@ class AlbumsController extends Controller
     {
         $album = Album::find((int)$id);
 
+        $music = new Music();
+
+        $album->tracks = $music->getMusicByAlbumId($id);
+
         if($album && $album->num_of_images > 0){
             $album->coverUrl = AlbumImageManager::getCoverURL($album->id, $album->title);
         }
 
         return response()->json($album);
+    }
+
+    /**
+     * @param  Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showTrack(Request $request) {
+        return response()->json(Music::find($request->id));
     }
 
     /**
@@ -74,7 +92,6 @@ class AlbumsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $status = true;
         $message = "Album ($id) successfully updated.";
         $fieldsNeedToBeUpdated = [];

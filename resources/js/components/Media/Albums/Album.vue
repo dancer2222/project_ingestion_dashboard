@@ -7,7 +7,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <!--<button class="btn btn-outline-dark float-left mr-3" v-on:click="$router.back()">Back</button>-->
+                        <button class="btn btn-outline-dark float-left mr-3" v-on:click="$router.back()">Back</button>
 
                         <strong>Album</strong> id:{{album.id}}
 
@@ -17,9 +17,6 @@
                         </div>
 
                     </div>
-                    <!--                    <img class="card-img-top mx-auto" src="img/no_product_image.png"-->
-                    <!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->
-
                     <div class="card-body">
                         <button class="btn btn-outline-warning float-right" v-on:click="editAlbum">edit</button>
                         <div >
@@ -27,8 +24,8 @@
                             <img v-else v-bind:src="pictureError" v-bind:width="200" v-bind:height="200" alt="No picture available">
                         </div>
                         <div class="row">
+                            <tracks :tracks="tracks"/>
                             <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="album" v-for="(value, key) in album">
-
                                 <b v-if="key == 'description'">
                                     <button @click="descriptionShow=!descriptionShow" class="btn btn-sm btn-outline-dark">{{key}}</button>
                                     <div v-show="descriptionShow">
@@ -37,7 +34,6 @@
                                 </b>
 
                                 <b v-if="key !== 'seq_id' && key !== 'description'">{{ key }} - {{ value }}</b>
-
                             </p>
                         </div>
                     </div>
@@ -50,8 +46,10 @@
 
 <script>
     import axios from 'axios'
+    import tracks from "./Tracks";
 
     export default {
+        components: {tracks},
         debug: true,
         name: 'albumsDataView',
         data: function () {
@@ -63,6 +61,7 @@
                 pictureError: 'img/image-not-found.jpeg',
                 pictureURL:'',
                 descriptionShow: false,
+                tracks: {}
             }
         },
         methods: {
@@ -74,6 +73,9 @@
                             self.album = response.data;
                             self.pictureURL = self.album.coverUrl;
                             Vue.delete(self.album, 'coverUrl');
+                            self.tracks = self.album.tracks;
+                            Vue.delete(self.album, 'tracks');
+                            console.log(self.album.tracks)
                         } else {
                             self.isError = true;
                         }

@@ -86,6 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/', 'AlbumsController@index')->name('index');
             Route::get('/{id}', 'AlbumsController@show')->name('show');
             Route::post('/{id}', 'AlbumsController@update')->name('update');
+            Route::get('/track/{id}', 'AlbumsController@showTrack')->name('showTrack');
         });
 
         // Audiobooks

@@ -28,6 +28,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 Vue.component('licensors-list', require('./components/Licensors/Licensors').default);
 Vue.component('search-form', require('./components/Licensors/SearchForm').default);
 Vue.component('meatadata-form', require('./components/MetadataForm/MetadataForm').default);
+Vue.component('tracks', require('./components/Media/Albums/Tracks').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
