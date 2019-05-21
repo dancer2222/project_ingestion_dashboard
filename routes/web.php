@@ -97,6 +97,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Audiobooks
         Route::name('audiobooks.')->prefix('/audiobooks')->group(function () {
             Route::get('/', 'AudiobooksController@index')->name('index');
+            Route::get('/{id}', 'AudiobooksController@show')->name('show');
+            Route::post('/{id}', 'AudiobooksController@update')->name('update');
         });
 
         // Games

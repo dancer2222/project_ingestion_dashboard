@@ -5,6 +5,13 @@ import Books from '../Books/Books'
 import Book from '../Books/Book'
 import BookList from '../Books/BookList'
 import BookEdit from '../Books/BookEdit'
+import Audiobooks from '../Audiobooks/Audiobooks'
+import Audiobook from '../Audiobooks/Audiobook'
+import AudiobookEdit from '../Audiobooks/AudiobookEdit'
+
+// const abook = {
+//   template: "<template><h1>ABOOK</h1></template>"
+// };
 
 export default [
     // Movies
@@ -19,5 +26,8 @@ export default [
             {path: ':id/edit', name:'books_edit', component: BookEdit},
         ]
     },
-
+    // Audiobooks
+    { path: '/audiobooks', name: 'audiobooks', component: Audiobooks, },
+    { path: '/audiobooks/:id', name: 'audiobook', component: Audiobook, },
+    { path: '/audiobooks/:id/edit', name: 'audiobook_edit', component: AudiobookEdit, },
 ]
