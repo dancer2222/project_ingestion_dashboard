@@ -46,7 +46,7 @@ cp env-example .env
 
 Run containers (from `laradock` folder)
 ```
-docker-compose up -d nginx
+docker-compose up -d nginx rabbitmq
 ```
 
 

@@ -55,7 +55,7 @@ class Audiobook extends Model
                 break;
             case 'author':
                 $key = !is_numeric($q) ? 'name': $key;
-                $query->whereHas('author', function ($q) use ($key, $operator, $needle) {
+                $query->whereHas('authorsAudiobooks', function ($q) use ($key, $operator, $needle) {
                     $q->where($key, $operator, $needle);
                 });
 
@@ -73,7 +73,23 @@ class Audiobook extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function licensor() {
+    public function licensor()
+    {
         return $this->belongsTo(Licensor::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function authorsAudiobooks()
+    {
+        return $this->belongsToMany(
+            AuthorAudiobook::class,
+            'audio_book_authors',
+            'audio_book_id',
+            'author_id',
+            'id',
+            'id'
+        );
     }
 }

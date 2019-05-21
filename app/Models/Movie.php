@@ -56,7 +56,8 @@ class Movie extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function licensor() {
+    public function licensor()
+    {
         return $this->belongsTo(Licensor::class);
     }
 }
