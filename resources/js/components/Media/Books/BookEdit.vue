@@ -52,6 +52,7 @@
                         if (Object.keys(response.data).length > 0) {
                             self.book = response.data;
                             Vue.delete(self.book, 'coverUrl');
+                            Vue.delete(self.book, 'authors');
                             self.bookCopy = {
                                 ...self.book
                             };
