@@ -2,19 +2,35 @@
 
 namespace App\Http\Controllers\Media;
 
+use App\Models\Game;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Managers\GameImageManager;
 
 class GamesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param  Game  $game
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Game $game)
     {
-        //
+        $message = '';
+        $status = '';
+
+        try {
+            $games = $game->search();
+        } catch (\Exception $e) {
+            $message = "There're no games by this query.";
+            $games = [];
+        }
+
+        return response()->json([
+            'games' => $games,
+            'status' => $status,
+            'message' => $message
+        ]);
     }
 
     /**
@@ -36,19 +52,45 @@ class GamesController extends Controller
      */
     public function show($id)
     {
-        //
+        $game = Game::find((int)$id);
+
+        if($game && $game->num_of_images > 0){
+            $game->coverUrl = GameImageManager::getCoverURL($game->id, $game->title);
+        }
+
+        return response()->json($game);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param  Request  $request
+     * @param $id
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
-        //
+        $status = true;
+        $message = "Game ($id) successfully updated.";
+        $fieldsNeedToBeUpdated = [];
+
+        foreach ($request->all() as $key => $value) {
+            $fieldsNeedToBeUpdated[$key] = $value;
+        }
+
+        if ($fieldsNeedToBeUpdated) {
+            $game = Game::where('id', $id)
+                ->update($fieldsNeedToBeUpdated);
+
+            if (!$game) {
+                $status = false;
+                $message = 'An error occurred while saving the book';
+            }
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+        ]);
     }
 
     /**

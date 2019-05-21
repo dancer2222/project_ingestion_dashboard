@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Album extends Model
+class Writer extends Model
 {
     /**
      * Connection name
@@ -16,11 +16,7 @@ class Album extends Model
     /**
      * @var string
      */
-    protected $table = 'music_album';
+    protected $table = 'writers';
     public $timestamps = false;
-    protected $fillable = ['id'];
-
-    public function getIdAttribute($value){
-        return (string)$value;
-    }
+    protected $fillable = ['id', 'name'];
 }

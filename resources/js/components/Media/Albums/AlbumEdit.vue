@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h4>
                     <button class="btn btn-outline-dark float-left" v-on:click="$router.back()">Back</button>
-                    <span class="ml-3">Edit - {{ bookCopy.title }}</span>
+                    <span class="ml-3">Edit - {{ albumCopy.title }}</span>
                     <button class="btn btn-outline-success float-right" v-on:click="updateMovie">Update</button>
                 </h4>
             </div>
@@ -13,9 +13,9 @@
                 <form action="">
 
                     <div class="row">
-                        <div class="form-group" v-for="(value, key) in book" v-bind:class="['col-12 col-md-6 col-lg-4']">
+                        <div class="form-group" v-for="(value, key) in album" v-bind:class="['col-12 col-md-6 col-lg-4']">
                             <label :for="key">{{ key }} </label>
-                            <input :type="key" class="form-control" :id="key" v-model="book[key]" v-bind:value="book[key]">
+                            <input :type="key" class="form-control" :id="key" v-model="album[key]" v-bind:value="album[key]">
                         </div>
                     </div>
 
@@ -34,13 +34,13 @@
     export default {
         data: function () {
             return {
-                bookCopy: {},
-                book: {},
-                mediaType: 'books',
+                albumCopy: {},
+                album: {},
+                mediaType: 'albums',
             }
         },
         mounted: function () {
-            console.log('book edit component');
+            console.log('album edit component');
             this.fetchData();
         },
         methods: {
@@ -50,11 +50,9 @@
                 axios.get(this.mediaType + '/' + this.$route.params.id)
                     .then(function (response) {
                         if (Object.keys(response.data).length > 0) {
-                            self.book = response.data;
-                            Vue.delete(self.book, 'coverUrl');
-                            Vue.delete(self.book, 'authors');
-                            self.bookCopy = {
-                                ...self.book
+                            self.album = response.data;
+                            self.albumCopy = {
+                                ...self.album
                             };
                         } else {
                             self.isError = true;
@@ -67,25 +65,26 @@
                 let self = this;
                 let needToBeUpdated = {};
 
-                for (let key in this.book) {
-                    if (this.book[key] !== this.bookCopy[key]) {
-                        needToBeUpdated[key] = this.book[key];
+                for (let key in this.album) {
+                    if (this.album[key] !== this.albumCopy[key]) {
+                        needToBeUpdated[key] = this.album[key];
                     }
                 }
 
                 if (Object.keys(needToBeUpdated).length > 0) {
-                    axios.post('/books/' + this.book.id, needToBeUpdated)
+                    axios.post('/albums/' + this.album.id, needToBeUpdated)
                         .then(function (response) {
                             if (response.data.status) {
-                                self.bookCopy = {
-                                    ...self.book
+                                self.albumCopy = {
+                                    ...self.album
                                 };
+
                                 toastr.success(response.data.message);
                             } else {
                                 toastr.error(response.data.message);
                             }
                         }).catch(function () {
-                        toastr.error('Something went wrong. Can\'t save the book.');
+                        toastr.error('Something went wrong. Can\'t save the album.');
                     })
                 }
             },

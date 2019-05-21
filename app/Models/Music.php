@@ -18,4 +18,27 @@ class Music extends Model
      */
     protected $table = 'music';
     public $timestamps = false;
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['id', 'title', 'artist_name'];
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getTrackById($id)
+    {
+        return $this->where('id', $id)->get();
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getMusicByAlbumId($id)
+    {
+        return $this->where('album_id', $id)->select(['id', 'title', 'artist_name'])->get();
+    }
 }

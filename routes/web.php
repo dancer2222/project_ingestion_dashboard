@@ -15,9 +15,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('home');
     });
+
     Route::group(['prefix' => 'ingestion', 'namespace' => 'Ingestion'], function () {
-        Route::get('/', 'Process\\IngestionController@indexIngestMovies')->name('indexIngestMovies');
+        Route::get('/', 'Process\\MovieIngestionController@indexIngestMovies')->name('indexIngestMovies');
+        Route::post('/movie/convertMetadata', 'Process\\MovieIngestionController@convertMetadataFile')->name('convertMetadataFile');
+        Route::post('/movie/ombdApi', 'Process\\MovieIngestionController@getDataFromOMBD')->name('ombdApi');
         Route::post('/movie/awsCheck', 'Aws\\AwsController@checkMovieForAwsBucket')->name('awsCheck');
+
+
     });
 
     
@@ -92,6 +97,9 @@ Route::group(['middleware' => ['auth']], function () {
         // Albums
         Route::name('albums.')->prefix('/albums')->group(function () {
             Route::get('/', 'AlbumsController@index')->name('index');
+            Route::get('/{id}', 'AlbumsController@show')->name('show');
+            Route::post('/{id}', 'AlbumsController@update')->name('update');
+            Route::get('/track/{id}', 'AlbumsController@showTrack')->name('showTrack');
         });
 
         // Audiobooks
@@ -104,6 +112,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Games
         Route::name('games.')->prefix('/games')->group(function () {
             Route::get('/', 'GamesController@index')->name('index');
+            Route::get('/{id}', 'GamesController@show')->name('show');
+            Route::post('/{id}', 'GamesController@update')->name('update');
         });
     });
     // Auth::logout();

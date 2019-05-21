@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="row">
-
             <div class="col-sm-6">
                 <div class="form-group">
                     <div class="input-group mb-1">
@@ -34,37 +33,28 @@
                         <p class="h-4 mt-3">ID: {{ licensors.id }}</p>
                         <p class="h-4">Media type: {{ licensors.media_type }}</p>
                     </div>
-
-
                 </div>
             </div>
 
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body">
-
                         <h5 class="mt-0 mb-1">{{ activeItems }} <i
                                 class="align-self-center mr-3 fas fa-smile text-success f-s-40"></i></h5>
                         <p class="h-4 mt-3">active {{ licensors.media_type }}</p>
                     </div>
-
                 </div>
-
             </div>
 
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body">
-
                         <h5 class="mt-0 mb-1">{{ inactiveItems }} <i
                                 class="align-self-center mr-3 fas fa-dizzy text-danger f-s-40"></i></h5>
                         <p class="h-4 mt-3">inactive {{ licensors.media_type }}</p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </div>
 </template>

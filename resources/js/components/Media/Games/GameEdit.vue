@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h4>
                     <button class="btn btn-outline-dark float-left" v-on:click="$router.back()">Back</button>
-                    <span class="ml-3">Edit - {{ bookCopy.title }}</span>
+                    <span class="ml-3">Edit - {{ gameCopy.title }}</span>
                     <button class="btn btn-outline-success float-right" v-on:click="updateMovie">Update</button>
                 </h4>
             </div>
@@ -13,9 +13,9 @@
                 <form action="">
 
                     <div class="row">
-                        <div class="form-group" v-for="(value, key) in book" v-bind:class="['col-12 col-md-6 col-lg-4']">
+                        <div class="form-group" v-for="(value, key) in game" v-bind:class="['col-12 col-md-6 col-lg-4']">
                             <label :for="key">{{ key }} </label>
-                            <input :type="key" class="form-control" :id="key" v-model="book[key]" v-bind:value="book[key]">
+                            <input :type="key" class="form-control" :id="key" v-model="game[key]" v-bind:value="game[key]">
                         </div>
                     </div>
 
@@ -34,13 +34,13 @@
     export default {
         data: function () {
             return {
-                bookCopy: {},
-                book: {},
-                mediaType: 'books',
+                gameCopy: {},
+                game: {},
+                mediaType: 'games',
             }
         },
         mounted: function () {
-            console.log('book edit component');
+            console.log('game edit component');
             this.fetchData();
         },
         methods: {
@@ -50,11 +50,9 @@
                 axios.get(this.mediaType + '/' + this.$route.params.id)
                     .then(function (response) {
                         if (Object.keys(response.data).length > 0) {
-                            self.book = response.data;
-                            Vue.delete(self.book, 'coverUrl');
-                            Vue.delete(self.book, 'authors');
-                            self.bookCopy = {
-                                ...self.book
+                            self.game = response.data;
+                            self.gameCopy = {
+                                ...self.game
                             };
                         } else {
                             self.isError = true;
@@ -67,25 +65,26 @@
                 let self = this;
                 let needToBeUpdated = {};
 
-                for (let key in this.book) {
-                    if (this.book[key] !== this.bookCopy[key]) {
-                        needToBeUpdated[key] = this.book[key];
+                for (let key in this.game) {
+                    if (this.game[key] !== this.gameCopy[key]) {
+                        needToBeUpdated[key] = this.game[key];
                     }
                 }
 
                 if (Object.keys(needToBeUpdated).length > 0) {
-                    axios.post('/books/' + this.book.id, needToBeUpdated)
+                    axios.post('/games/' + this.game.id, needToBeUpdated)
                         .then(function (response) {
                             if (response.data.status) {
-                                self.bookCopy = {
-                                    ...self.book
+                                self.gameCopy = {
+                                    ...self.game
                                 };
+
                                 toastr.success(response.data.message);
                             } else {
                                 toastr.error(response.data.message);
                             }
                         }).catch(function () {
-                        toastr.error('Something went wrong. Can\'t save the book.');
+                        toastr.error('Something went wrong. Can\'t save the game.');
                     })
                 }
             },

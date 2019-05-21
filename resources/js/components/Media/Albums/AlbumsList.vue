@@ -2,14 +2,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <strong>Books with id:</strong>  {{q}}
+                <strong>albums with id:</strong>  {{q}}
             </div>
 
             <div class="card-body">
 
                 <div class="alert alert-secondary" role="alert"
-                     v-if="books.total !== null && books.total === 0">
-                    No books found by <b>"{{ $route.query.q }}"</b>
+                     v-if="albums.total !== null && albums.total === 0">
+                    No albums found by <b>"{{ $route.query.q }}"</b>
                 </div>
 
                 <table class="table table-hover">
@@ -17,28 +17,28 @@
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">Title</th>
-                        <th scope="col">ISBN</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="book in books.data"
+                    <tr v-for="album in albums.data"
                         :style="{cursor:'pointer'}"
-                        @click = "getBookData">
-                        <th scope="row">{{ book.id }}</th>
-                        <td>{{ book.title }}</td>
-                        <td>{{ book.isbn}}</td>
-                        <span v-bind:class="['badge', book.status === 'active' ? 'badge-success' : 'badge-danger']">{{ book.status }}</span>
+                        @click = "getAlbumData(album.id)">
+                        <th scope="row">{{ album.id }}</th>
+                        <td>{{ album.title }}</td>
+                        <td>{{ album.description}}</td>
+                        <span v-bind:class="['badge', album.status === 'active' ? 'badge-success' : 'badge-danger']">{{ album.status }}</span>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
             <nav aria-label="Page navigation" class="mx-auto">
-                <paginate v-if="books.total !== null && books.total >1"
+                <paginate v-if="albums.total !== null && albums.total >1"
                           v-model="page"
-                          :initial-page="books.current_page"
-                          :page-count="Math.round(books.total / books.per_page)"
+                          :initial-page="albums.current_page"
+                          :page-count="Math.round(albums.total / albums.per_page)"
                           :click-handler="changePage"
                           :prev-text="'Prev'"
                           :next-text="'Next'"
@@ -61,20 +61,21 @@
     import Paginate from 'vuejs-paginate'
 
     export default {
-        name: 'booksList',
+        name: 'albumsList',
         components: {Paginate},
         data: function () {
             return {
-                mediaType: 'books',
+                mediaType: 'albums',
                 q: this.$route.query.q,
                 isList: true,
-                books: [],
+                albums: [],
                 page: this.$route.query.page,
             }
         },
         methods: {
-            getBookData: function () {
-                this.$router.push({name: 'booksData', path:this.mediaType + '/' + this.q, params: { id: this.q }});
+            getAlbumData: function (albumId) {
+                this.q = albumId;
+                this.$router.push({name: 'albumsData', path:this.mediaType + '/' + this.q, params: { id: this.q }});
             },
             changePage: function (page) {
                 this.page = page;
@@ -95,7 +96,7 @@
                         page: this.page,
                     },
                 }).then(function (response) {
-                    self.books = response.data.books;
+                    self.albums = response.data.albums;
                 });
             },
         },
