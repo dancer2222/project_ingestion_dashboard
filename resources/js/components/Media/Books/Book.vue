@@ -40,7 +40,7 @@
                                     </div>
                                 </b>
 
-                                <b v-if="key !== 'seq_id' && key !== 'description'">{{ key }} - {{ value }}</b>
+                                <b v-if="key !== 'seq_id' && key !== 'description' && key !== 'author'">{{ key }} - {{ value }}</b>
 
                             </p>
                         </div>

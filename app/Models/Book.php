@@ -29,6 +29,17 @@ class Book extends Model
         return (string)$value;
     }
 
+    public function authors(){
+        return $this->belongsToMany(
+            Author::class,
+            'book_authors',
+            'book_id',
+            'author_id',
+            'id',
+            'id'
+        );
+    }
+
     /**
      * @return LengthAwarePaginator
      */

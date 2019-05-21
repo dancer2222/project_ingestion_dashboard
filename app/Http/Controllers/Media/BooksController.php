@@ -54,14 +54,10 @@ class BooksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-//    public function show($id)
-//    {
-//        return response()->json(Book::find((int)$id));
-//    }
 
     public function show($id)
     {
-        $book = Book::find((int)$id);
+        $book = Book::where('id', (int)$id)->with('authors:id,name,status')->first();
 
         if($book && $book->num_of_images > 0){
             $book->coverUrl = BookImageManager::getCoverURL($book->isbn);
