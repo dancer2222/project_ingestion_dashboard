@@ -13,6 +13,7 @@ import Games from "../Games/Games";
 import GamesList from "../Games/GamesList";
 import Game from "../Games/Game";
 import GameEdit from "../Games/GameEdit";
+import Track from "../Albums/Track";
 
 export default [
     // Movies
@@ -33,6 +34,7 @@ export default [
             {path: '', name: 'albums', component: AlbumsList},
             {path: ':id', name:'albumsData', component: Album},
             {path: ':id/edit', name:'albums_edit', component: AlbumEdit},
+            {path: '/track/:id', name:'track', component: Track},
         ]
     },
     // Games
