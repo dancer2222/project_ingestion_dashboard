@@ -96,8 +96,8 @@ export default {
 
             axios.get(location.origin + '/movies', {
                 params: {
-                    q: this.$route.query.q,
                     page: this.page,
+                    ...this.$route.query
                 },
             }).then(function (response) {
                 self.movies = response.data.movies;

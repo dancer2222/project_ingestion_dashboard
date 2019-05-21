@@ -9,10 +9,13 @@ require('./bootstrap');
 require('jquery-match-height');
 require('./theme/main');
 window.Vue = require('vue');
+require('./filters/filters');
 
 import VueRouter from 'vue-router'
 import Routes from './components/Media/Search/Routes'
 import SearchApp from './components/Media/Search/SearchComponent'
+import Homepage from './components/Home/Homepage'
+import GlobalMethods from './globals/sort'
 
 /**
  * The following block of code may be used to automatically register your
@@ -40,16 +43,22 @@ const app = new Vue({
     el: '#app'
 });
 
-console.log("Compiled!!!");
-
 
 jQuery(document).ready(function($) {
+    if ($('#homepage').length > 0) {
+        const homepage = new Vue({
+            el: '#homepage',
+            render: h => h(Homepage)
+        })
+    }
+
     if ($('#media_search_page').length > 0) {
         var router = new VueRouter({
             routes: Routes
         });
 
         Vue.use(VueRouter);
+        Vue.use(GlobalMethods);
         const appSearch = new Vue({
             el: '#media_search_page',
             render: h => h(SearchApp),

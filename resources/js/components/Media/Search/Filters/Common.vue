@@ -2,25 +2,39 @@
     <div class="form-row">
         <div class="form-group col">
 
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input"
-                       name="status[active]" id="status_active"
-                    v-model="filters.status['active']" v-bind:value="filters.status['active']"
-                    v-on:change="watchFilters">
-                <label class="custom-control-label" for="status_active">active</label>
+            <div class="custom-control custom-radio custom-control-inline search-radio">
+                <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input"
+                   v-model="filters.search_by"
+                    value="default">
+                <label class="custom-control-label" for="customRadioInline4">Default</label>
             </div>
 
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input"
-                       name="status[inactive]" id="status_inactive"
-                       v-model="filters.status['inactive']" v-bind:value="filters.status['inactive']"
-                       v-on:change="watchFilters">
-                <label class="custom-control-label" for="status_inactive">inactive</label>
+            <div class="custom-control custom-radio custom-control-inline search-radio">
+                <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input"
+                   v-model="filters.search_by"
+                   value="licensor">
+                <label class="custom-control-label" for="customRadioInline2">Licensor</label>
             </div>
 
-            <books v-if="mediaType === 'books'"></books>
-            <movies v-if="mediaType === 'movies'"></movies>
-            <audiobooks v-if="mediaType === 'audiobooks'"></audiobooks>
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                v-if="['books', 'audiobooks'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input"
+                   v-model="filters.search_by"
+                   value="artist">
+                <label class="custom-control-label" for="customRadioInline1">Artist</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                v-if="['books', 'audiobooks'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input"
+                   v-model="filters.search_by"
+                   value="author">
+                <label class="custom-control-label" for="customRadioInline3">Author</label>
+            </div>
+
+<!--            <books v-if="mediaType === 'books'"></books>-->
+<!--            <movies v-if="mediaType === 'movies'"></movies>-->
+<!--            <audiobooks v-if="mediaType === 'audiobooks'"></audiobooks>-->
 
         </div>
     </div>
@@ -36,7 +50,7 @@
             mediaType: {
                 type: String,
                 validator: function (mt) {
-                    return ['books', 'movies', 'audiobooks', 'albums', 'games'].indexOf(mt) !== -1;
+                    return ['', 'books', 'movies', 'audiobooks', 'albums', 'games'].indexOf(mt) !== -1;
                 }
             },
         },
@@ -48,18 +62,32 @@
         data: () => {
             return {
                 filters: {
-                    status: { active: false, inactive: false, },
+                    // status: 'active',
+                    search_by: 'default'
                 }
             }
         },
         methods: {
-            watchFilters: function () {
+            updateFilters: function () {
                 this.$emit('update-filters', {...this.filters})
             },
         },
-        // watch: {
+        watch: {
         //     'filters.status.active': function () { console.log('active changed');},
         //     'filters.status.inactive': function () { console.log('inactive changed');},
-        // },
+            'filters.search_by': function(v) {
+                this.updateFilters()
+            }
+        },
     }
 </script>
+
+<style>
+    .search-radio label:after, .search-radio label:before {
+        top: 2px
+    }
+
+    .search-radio label {
+        font-size: 12px;
+    }
+</style>

@@ -27,6 +27,7 @@
     "dependencies": {
         "jquery-match-height": "^0.7.2",
         "toastr": "^2.1.4",
+        "vue-loading-overlay": "^3.2.0",
         "vue-router": "^3.0.2",
         "vuejs-paginate": "^2.1.0"
     }

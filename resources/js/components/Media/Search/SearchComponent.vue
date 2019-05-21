@@ -5,19 +5,19 @@
                     
                 <div class="card-body">
                     <div class="w-100 mb-3">
-                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/movies')">
+                        <button v-bind:class="['btn btn-sm btn-outline-dark', {'active': mediaType === 'movies'}]" v-on:click="goTo('movies')">
                             Movies
                         </button>
-                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/books')">
+                        <button v-bind:class="['btn btn-sm btn-outline-dark', {'active': mediaType === 'books'}]" v-on:click="goTo('books')">
                             Books
                         </button>
-                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/audiobooks')">
+                        <button v-bind:class="['btn btn-sm btn-outline-dark', {'active': mediaType === 'audiobooks'}]" v-on:click="goTo('audiobooks')">
                             Audiobooks
                         </button>
-                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/albums')">
+                        <button v-bind:class="['btn btn-sm btn-outline-dark', {'active': mediaType === 'albums'}]" v-on:click="goTo('albums')">
                             Albums
                         </button>
-                        <button class="btn btn-sm btn-outline-dark" v-on:click="$router.push('/games')">
+                        <button v-bind:class="['btn btn-sm btn-outline-dark', {'active': mediaType === 'games'}]" v-on:click="goTo('games')">
                             Games
                         </button>
                     </div>
@@ -27,21 +27,21 @@
 
                         <div class="form-row">
 
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-11">
                                 <input type="text" class="form-control" name="q" id="q" placeholder="..."
                                     v-model="query">
                             </div>
 
-                            <div class="form-group col-md-3">
-                                <select id="media_type" name="media_type" v-bind:class="['form-control', {'is-invalid': isMediaTypeInvalid}]"
-                                    v-model="mediaType">
-                                    <option disabled value="">Media type</option>
+<!--                            <div class="form-group col-md-3">-->
+<!--                                <select id="media_type" name="media_type" v-bind:class="['form-control', {'is-invalid': isMediaTypeInvalid}]"-->
+<!--                                    v-model="mediaType">-->
+<!--                                    <option disabled value="">Media type</option>-->
 
-                                    <option v-for="media_type in mediaTypes"
-                                        v-bind:value="media_type">{{ media_type }}</option>
+<!--                                    <option v-for="media_type in mediaTypes"-->
+<!--                                        v-bind:value="media_type">{{ media_type }}</option>-->
 
-                                </select>
-                            </div>
+<!--                                </select>-->
+<!--                            </div>-->
 
                             <div class="form-group col-md-1">
                                 <button type="submit" class="btn btn-outline-success w-100">
@@ -52,16 +52,16 @@
                         </div>
 
                         <!-- Filters -->
-                        <div class="form-row">
-                            <div class="form-group col">
-                                <a href="#filters-collapse" data-toggle="collapse"  role="button" aria-expanded="false"
-                                   aria-controls="filters-collapse"
-                                   class="float-right" id="search-filters-toggler">
-                                    filters
-                                </a>
-                            </div>
-                        </div>
-                        <div class="collapse" id="filters-collapse">
+<!--                        <div class="form-row">-->
+<!--                            <div class="form-group col">-->
+<!--                                <a href="#filters-collapse" data-toggle="collapse"  role="button" aria-expanded="true"-->
+<!--                                   aria-controls="filters-collapse"-->
+<!--                                   class="float-right" id="search-filters-toggler">-->
+<!--                                    filters-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="collapse show" id="filters-collapse">
                             <Filters v-on:update-filters="onUpdateFilters" v-bind:media-type="mediaType"></Filters>
                         </div>
 
@@ -98,7 +98,7 @@ export default {
         return {
             isMediaTypeInvalid: false,
             mediaTypes: mediaTypes,
-            mediaType: false,
+            mediaType: '',
             query: this.$route.query.q,
             filters: {},
         }
@@ -106,13 +106,11 @@ export default {
     mounted: function () {
         this.setMediaTypeInSelect()
     },
-    updated: function () {
-        this.setMediaTypeInSelect()
-    },
-    beforeMount: function () {
-        this.setMediaTypeInSelect();
-    },
     methods: {
+        goTo: function (mediaType) {
+            this.mediaType = mediaType;
+            this.$router.push({ name: mediaType })
+        },
         submitForm: function () {
             if (!this.mediaType) {
                 this.isMediaTypeInvalid = true;
@@ -132,7 +130,7 @@ export default {
         redirect: function () {
             let query = {
                 q: this.query,
-                ...this.getFilters(),
+                ...this.filters,
             };
 
             this.$router.push({
@@ -143,25 +141,6 @@ export default {
                     q: this.query,
                 },
             });
-        },
-        getFilters: function () {
-            let filters = {};
-
-            for (let filter in this.filters) {
-                switch (filter) {
-                    case 'status':
-                        if (this.filters['status'].active === true) {
-                            filters['status_active'] = true;
-                        }
-
-                        if (this.filters['status'].inactive === true) {
-                            filters['status_inactive'] = true;
-                        }
-                        break;
-                }
-            }
-
-            return filters;
         },
         setMediaTypeInSelect: function () {
             for (let media_type of this.mediaTypes) {
@@ -177,6 +156,9 @@ export default {
                 this.redirect()
             }
         },
+        filters: function () {
+
+        }
     },
 }
 

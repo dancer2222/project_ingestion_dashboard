@@ -17,6 +17,7 @@ class Music extends Model
      * @var string
      */
     protected $table = 'music';
+    public $timestamps = false;
 
     /**
      * @var array
