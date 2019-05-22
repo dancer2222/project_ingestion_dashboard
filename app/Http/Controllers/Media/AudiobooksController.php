@@ -51,7 +51,7 @@ class AudiobooksController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Audiobook::find($id));
+        return response()->json(Audiobook::where('id', $id)->with('products')->first());
     }
 
     /**
