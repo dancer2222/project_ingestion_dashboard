@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Ingestion\Process;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Ingestion\ArrayMovieLicensors;
 
 /**
  * Class MovieIngestionController
@@ -16,7 +17,9 @@ class MovieIngestionController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function indexIngestMovies() {
-        return view('ingestion.metadataForm');
+        $arrayMovieLicensors = new ArrayMovieLicensors();
+
+        return view('ingestion.metadataForm', ['licensorNames' => $arrayMovieLicensors->getLicensorNames()]);
     }
 
     /**

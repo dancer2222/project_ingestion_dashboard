@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#products">Show tracks in album
+        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#products">Show products audiobook
         </button>
         <div id="products" class="collapse">
             <ul class="list-group">
@@ -24,8 +24,6 @@
         ],
         data: function () {
             return {
-                product: {},
-                productkData: null,
             }
         },
     }

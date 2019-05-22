@@ -5,12 +5,9 @@
                 <label class="input-group-text" for="inputGroupSelect01">Select licensor folder name</label>
             </div>
             <select class="custom-select" id="inputGroupSelect01" v-model="licensor" v-on:change="onChange">
-                <option>ECHELON</option>
-                <option>GRAVITAS</option>
-                <option>MVD</option>
-                <option>NAVI</option>
-                <option>RSQUARED</option>
-                <option>SCREENMEDIA</option>
+                <option v-for="(name, index) in licensorNames">
+                    {{ name }}
+                </option>
             </select>
         </div>
 
@@ -71,6 +68,9 @@
     import toastr from 'toastr';
 
     export default {
+        props: {
+            data: Array
+        },
         data() {
             return {
                 file: '',
@@ -82,9 +82,13 @@
                 height: '50px',
                 submitData: true,
                 licensor: null,
+                licensorNames: this.data[0],
             };
         },
         methods: {
+            updated() {
+                console.log(this.licensorNames)
+            },
             onChange(e) {
 
                 if (e.target.files !== undefined) {
