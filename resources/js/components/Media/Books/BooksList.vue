@@ -2,7 +2,11 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <strong>Books with id:</strong>  {{q}}
+                Books 
+                <span v-if="this.$route.query.search_by"> by </span>
+                <span v-if="this.$route.query.search_by === 'default' || (this.$route.query.q && !this.$route.query.search_by)"> id/ isbn/ title </span>
+                <span v-else>{{ this.$route.query.search_by }}</span>
+                {{this.$route.query.q}}
             </div>
 
             <div class="card-body">
@@ -82,8 +86,8 @@
                 this.$router.push({
                     path: this.$route.fullPath,
                     query: {
-                        q: this.$route.query.q,
-                        page: page
+                        page: page,
+                        ...this.$route.query
                     }
                 });
             },
@@ -92,8 +96,8 @@
 
                 axios.get(this.mediaType, {
                     params: {
-                        q: this.$route.query.q,
                         page: this.page,
+                        ...this.$route.query
                     },
                 }).then(function (response) {
                     self.books = response.data.books;
