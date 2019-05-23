@@ -48,6 +48,14 @@
                 <label class="custom-control-label" for="customRadioInline6">Director</label>
             </div>
 
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                 v-if="['movies'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline7" name="customRadioInline1" class="custom-control-input"
+                       v-model="filters.search_by"
+                       value="writer">
+                <label class="custom-control-label" for="customRadioInline7">Writer</label>
+            </div>
+
 <!--            <books v-if="mediaType === 'books'"></books>-->
 <!--            <movies v-if="mediaType === 'movies'"></movies>-->
 <!--            <audiobooks v-if="mediaType === 'audiobooks'"></audiobooks>-->

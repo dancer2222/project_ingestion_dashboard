@@ -55,7 +55,7 @@ class MoviesController extends Controller
      */
     public function show($id)
     {
-        $movie = Movie::where('id', (int)$id)->with(['licensor:id,name,status', 'producers:id,name', 'directors:id,name'])->first();
+        $movie = Movie::where('id', (int)$id)->with(['licensor:id,name,status', 'producers:id,name', 'directors:id,name', 'writers:id,name,status'])->first();
 
         if($movie && $movie->num_of_images > 0){
             $movie->coverUrl = MovieImageManager::getCoverURL($movie->id, $movie->title);
