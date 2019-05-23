@@ -19,24 +19,32 @@
                     <div class="card-body">
 
                         <div class="row">
+                            <AudiobookProducts :products="products" />
                             <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="abook" v-for="(value, key) in abook">
-                                <b>{{ key }}</b> - {{ value }}
+                                <b v-if="key == 'description'">
+                                    <button @click="descriptionShow=!descriptionShow"
+                                            class="btn btn-sm btn-outline-dark">{{key}}
+                                    </button>
+                                    <div v-show="descriptionShow">
+                                        <b>{{ value }}</b>
+                                    </div>
+                                </b>
+                                <b v-if="key !== 'seq_id' && key !== 'description'">{{ key }} - {{ value }}</b>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
 </template>
 
 <script>
     import axios from 'axios';
+    import AudiobookProducts from "./AudiobookProducts";
 
     export default {
+        components: {AudiobookProducts},
         debug: true,
         name: 'audiobook',
         data: function () {
@@ -44,6 +52,8 @@
                 isError: false,
                 errorMessage: 'Something went wrong. Please try reloading the <a href="javascript:location.reload();">page</a>',
                 abook: {},
+                descriptionShow: false,
+                products: {},
             }
         },
         mounted() {
@@ -58,6 +68,8 @@
                     .then(function (response) {
                         if (Object.keys(response.data).length > 0) {
                             self.abook = response.data;
+                            self.products = self.abook.products;
+                            Vue.delete(self.abook, 'products');
                         } else {
                             self.isError = true;
                         }

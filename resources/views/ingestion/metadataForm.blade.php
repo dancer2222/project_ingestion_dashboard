@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">Dashboard</div>
                     <div class="card-body">
-                        <metadata-form></metadata-form>
+                        <metadata-form :data="{{ json_encode([$licensorNames]) }}"></metadata-form>
                     </div>
                 </div>
             </div>

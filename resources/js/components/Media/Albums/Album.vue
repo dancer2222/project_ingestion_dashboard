@@ -34,7 +34,9 @@
                                 </b>
 
                                 <b v-if="key !== 'seq_id' && key !== 'description'">{{ key }} - {{ value }}</b>
+
                             </p>
+
                         </div>
                     </div>
                 </div>

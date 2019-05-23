@@ -12,15 +12,15 @@
                         {{ movie.title }}
 
                         <button class="btn btn-outline-info float-right" v-on:click="editMovie">edit</button>
+
+                    </div>
+
+                    <div class="card-body">
                         <div>
                             <img v-if="movie.num_of_images > 0" v-bind:src="movie.coverUrl" alt="Movie cover"/>
                             <img v-else v-bind:src="pictureError" v-bind:width="200" v-bind:height="200"
                                  alt="No picture available">
                         </div>
-                    </div>
-
-                    <div class="card-body">
-
                         <div class="row">
                             <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="movie"
                                v-for="(value, key) in movie">

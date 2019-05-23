@@ -23,7 +23,11 @@
                     </thead>
                     <tbody>
                     <tr v-for="abook in abooks.data">
-                        <th scope="row">{{ abook.id }}</th>
+                        <th scope="row">
+                            <router-link :to="{ name: 'audiobook', params: { id: abook.id }}">
+                                {{ abook.id }}
+                            </router-link>
+                        </th>
                         <td :style="{whiteSpace: 'nowrap'}">
                             <router-link :to="{ name: 'audiobook', params: { id: abook.id }}">
                                 {{ abook.title }}

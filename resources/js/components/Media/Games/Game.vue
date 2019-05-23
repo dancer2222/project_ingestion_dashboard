@@ -7,7 +7,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <!--<button class="btn btn-outline-dark float-left mr-3" v-on:click="$router.back()">Back</button>-->
+                        <button class="btn btn-outline-dark float-left mr-3" v-on:click="$router.back()">Back</button>
                         <strong>Game</strong> Title : {{game.title}}
 
                         <div class='float-right'>

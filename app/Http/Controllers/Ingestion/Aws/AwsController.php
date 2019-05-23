@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ingestion\Aws;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Ingestion\ArrayMovieLicensors;
 
 /**
  * Class AwsController
@@ -33,10 +34,12 @@ class AwsController extends Controller
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function checkMovieForAwsBucket(Request $request) {
+        $arrayMovieLicensors = new ArrayMovieLicensors();
 
+        $folder = $arrayMovieLicensors->getFolderName( $request->folder);
         try {
             $result = $this->s3->doesObjectExist(env('AWS_BUCKET'),
-                $request->folder.'/Movies/'.$request->body);
+                $folder.'/Movies/'.$request->body);
         } catch (Exception $exception) {
             return json_encode($exception->getMessage());
         }

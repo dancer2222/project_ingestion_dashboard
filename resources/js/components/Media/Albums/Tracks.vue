@@ -4,7 +4,7 @@
         </button>
         <div id="music" class="collapse">
             <ul class="list-group">
-                <li v-for="track in tracks" class="list-group-item" style="cursor: pointer">
+                <li v-for="track in tracks" class="list-group-item" :style="{cursor:'pointer'}">
                     <b v-on:click="showTraks(track)"><span style="color: red">ID</span> : {{ track.id }} | <span
                             style="color: red">Title</span> : {{ track.title }} | <span
                             style="color: red">Artist name</span> : {{ track.artist_name }}</b>
@@ -46,7 +46,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>
