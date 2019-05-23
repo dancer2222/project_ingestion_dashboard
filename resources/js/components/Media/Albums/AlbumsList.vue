@@ -2,7 +2,10 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <strong>albums with id:</strong>  {{q}}
+                Albums
+                <span v-if="this.$route.query.search_by === 'default' || (this.$route.query.q && !this.$route.query.search_by)"> Id /title </span>
+                <span v-else>{{ this.$route.query.search_by }}</span>
+                {{this.$route.query.q}}
             </div>
 
             <div class="card-body">

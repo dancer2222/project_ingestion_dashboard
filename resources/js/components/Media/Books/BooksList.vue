@@ -2,9 +2,8 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                Books 
-                <span v-if="this.$route.query.search_by"> by </span>
-                <span v-if="this.$route.query.search_by === 'default' || (this.$route.query.q && !this.$route.query.search_by)"> id/ isbn/ title </span>
+                Books
+                <span v-if="this.$route.query.search_by === 'default' || (this.$route.query.q && !this.$route.query.search_by)"> Id / isbn / title </span>
                 <span v-else>{{ this.$route.query.search_by }}</span>
                 {{this.$route.query.q}}
             </div>
