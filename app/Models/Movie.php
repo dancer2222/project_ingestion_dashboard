@@ -46,6 +46,20 @@ class Movie extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function writers(){
+        return $this->belongsToMany(
+            Writer::class,
+            'movie_writers',
+            'movie_id',
+            'writer_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function directors(){
         return $this->belongsToMany(
             Producer::class,
@@ -90,6 +104,13 @@ class Movie extends Model
             case 'director':
                 $key = !is_numeric($q) ? 'name' : $key;
                 $query->whereHas('directors', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
+            case 'writer':
+                $key = !is_numeric($q) ? 'name' : $key;
+                $query->whereHas('writers', function ($q) use ($key, $operator, $needle) {
                     $q->where($key, $operator, $needle);
                 });
 
