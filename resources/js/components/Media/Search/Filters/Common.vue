@@ -32,6 +32,22 @@
                 <label class="custom-control-label" for="customRadioInline3">Author</label>
             </div>
 
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                 v-if="['movies'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline5" name="customRadioInline1" class="custom-control-input"
+                       v-model="filters.search_by"
+                       value="producer">
+                <label class="custom-control-label" for="customRadioInline5">Producer</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                 v-if="['movies'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline6" name="customRadioInline1" class="custom-control-input"
+                       v-model="filters.search_by"
+                       value="director">
+                <label class="custom-control-label" for="customRadioInline6">Director</label>
+            </div>
+
 <!--            <books v-if="mediaType === 'books'"></books>-->
 <!--            <movies v-if="mediaType === 'movies'"></movies>-->
 <!--            <audiobooks v-if="mediaType === 'audiobooks'"></audiobooks>-->
@@ -53,6 +69,9 @@
                     return ['', 'books', 'movies', 'audiobooks', 'albums', 'games'].indexOf(mt) !== -1;
                 }
             },
+            incomingFilters:{
+                type:Object,
+            }
         },
         components: {
             books: Books,
@@ -71,6 +90,9 @@
             updateFilters: function () {
                 this.$emit('update-filters', {...this.filters})
             },
+        },
+        beforeUpdate:function(){
+            this.filters = this.incomingFilters;
         },
         watch: {
         //     'filters.status.active': function () { console.log('active changed');},

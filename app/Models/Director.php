@@ -18,4 +18,28 @@ class Director extends Model
      */
     protected $table = 'directors';
     public $timestamps = false;
+
+    /**
+     * Mutator for 'id' field
+     * @param $value
+     * @return string
+     */
+    public function getIdAttribute($value){
+        return (string)$value;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function movies()
+    {
+        return $this->belongsToMany(
+            Movie::class,
+            'movie_directors',
+            'director_id',
+            'movie_id',
+            'id',
+            'id'
+        );
+    }
 }

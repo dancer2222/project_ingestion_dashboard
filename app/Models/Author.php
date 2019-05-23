@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
@@ -23,6 +22,11 @@ class Author extends Model
 
     const NAME_MAX_LENGTH = 50;
 
+    /**
+     * Mutator for 'id' field
+     * @param $value
+     * @return string
+     */
     public function getIdAttribute($value){
         return (string)$value;
     }

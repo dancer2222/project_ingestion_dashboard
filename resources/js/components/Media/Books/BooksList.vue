@@ -86,8 +86,8 @@
                 this.$router.push({
                     path: this.$route.fullPath,
                     query: {
-                        page: page,
-                        ...this.$route.query
+                        q: this.$route.query.q,
+                        page: page
                     }
                 });
             },

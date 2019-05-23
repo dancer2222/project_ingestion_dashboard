@@ -21,6 +21,43 @@ class Movie extends Model
     public $timestamps = false;
 
     /**
+     * Mutator for 'id' field
+     * @param $value
+     * @return string
+     */
+    public function getIdAttribute($value){
+        return (string)$value;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function producers(){
+        return $this->belongsToMany(
+            Producer::class,
+            'movie_producers',
+            'movie_id',
+            'producer_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function directors(){
+        return $this->belongsToMany(
+            Producer::class,
+            'movie_directors',
+            'movie_id',
+            'director_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
      * @return LengthAwarePaginator
      */
     public function search()
@@ -43,11 +80,24 @@ class Movie extends Model
                 });
 
                 break;
+            case 'producer':
+                $key = !is_numeric($q) ? 'name' : $key;
+                $query->whereHas('producers', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
+            case 'director':
+                $key = !is_numeric($q) ? 'name' : $key;
+                $query->whereHas('directors', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
             default:
                 $key = !is_numeric($q) ? 'title': $key;
                 $query->where($key, $operator, $needle);
         }
-
         $movies = $query->paginate();
 
         return $movies;
