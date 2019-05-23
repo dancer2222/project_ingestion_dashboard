@@ -62,7 +62,8 @@
 <!--                            </div>-->
 <!--                        </div>-->
                         <div class="collapse show" id="filters-collapse">
-                            <Filters v-on:update-filters="onUpdateFilters" v-bind:media-type="mediaType"></Filters>
+                            <Filters v-on:update-filters="onUpdateFilters" v-bind:media-type="mediaType" v-bind:incoming-filters="filters"></Filters>
+                            <!--<Filters v-on:update-filters="onUpdateFilters" v-bind:media-type="mediaType" ></Filters>-->
                         </div>
 
                         
@@ -100,7 +101,9 @@ export default {
             mediaTypes: mediaTypes,
             mediaType: '',
             query: this.$route.query.q,
-            filters: {},
+            filters: {
+                search_by:'default',
+            },
         }
     },
     mounted: function () {
@@ -109,6 +112,7 @@ export default {
     methods: {
         goTo: function (mediaType) {
             this.mediaType = mediaType;
+            this.filters = {search_by:'default'};
             this.$router.push({ name: mediaType })
         },
         submitForm: function () {
