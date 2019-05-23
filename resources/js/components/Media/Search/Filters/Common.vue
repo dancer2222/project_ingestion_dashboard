@@ -9,6 +9,14 @@
                 <label class="custom-control-label" for="customRadioInline4">Default</label>
             </div>
 
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                 v-if="['movies'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline8" name="customRadioInline1" class="custom-control-input"
+                       v-model="filters.search_by"
+                       value="brightcove">
+                <label class="custom-control-label" for="customRadioInline8">Brightcove_id</label>
+            </div>
+
             <div class="custom-control custom-radio custom-control-inline search-radio">
                 <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input"
                    v-model="filters.search_by"

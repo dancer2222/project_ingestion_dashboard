@@ -115,6 +115,13 @@ class Movie extends Model
                 });
 
                 break;
+            case 'brightcove':
+                $key = !is_numeric($q) ? 'status' : 'brightcove_Id';
+                $query->whereHas('brightcoveId', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
             default:
                 $key = !is_numeric($q) ? 'title': $key;
                 $query->where($key, $operator, $needle);
@@ -130,5 +137,13 @@ class Movie extends Model
     public function licensor()
     {
         return $this->belongsTo(Licensor::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\hasOne
+     */
+    public function brightcoveId()
+    {
+        return $this->hasOne(BrightcoveDb::class, 'id', 'id');
     }
 }
