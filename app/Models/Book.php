@@ -76,6 +76,21 @@ class Book extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function publisher()
+    {
+        return $this->belongsToMany(
+            Publisher::class,
+            'book_publishers',
+            'book_id',
+            'publisher_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
      * @return LengthAwarePaginator
      */
     public function search()
@@ -108,6 +123,13 @@ class Book extends Model
             case 'artist':
                 $key = !is_numeric($q) ? 'name': $key;
                 $query->whereHas('artists', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
+            case 'publisher':
+                $key = !is_numeric($q) ? 'name': $key;
+                $query->whereHas('publisher', function ($q) use ($key, $operator, $needle) {
                     $q->where($key, $operator, $needle);
                 });
 

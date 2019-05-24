@@ -58,7 +58,7 @@ class BooksController extends Controller
 
     public function show($id)
     {
-        $book = Book::where('id', (int)$id)->with(['authors:id,name,status', 'artists:id,name,status', 'licensor:id,name,status'])->first();
+        $book = Book::where('id', (int)$id)->with(['authors:id,name,status', 'artists:id,name,status', 'licensor:id,name,status', 'publisher:id,name,status'])->first();
 
         if($book && $book->num_of_images > 0){
             $book->coverUrl = BookImageManager::getCoverURL($book->isbn);
