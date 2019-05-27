@@ -60,6 +60,24 @@ class Audiobook extends Model
                 });
 
                 break;
+            case 'dataOriginId':
+                $query->where('data_origin_id', $operator, $needle);
+
+                break;
+            case 'publisher':
+                $key = !is_numeric($q) ? 'name': $key;
+                $query->whereHas('publishersAudiobooks', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
+            case 'narrator':
+                $key = !is_numeric($q) ? 'name': $key;
+                $query->whereHas('narratorsAudiobooks', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
             default:
                 $key = !is_numeric($q) ? 'title': $key;
                 $query->where($key, $operator, $needle);
@@ -88,6 +106,36 @@ class Audiobook extends Model
             'audio_book_authors',
             'audio_book_id',
             'author_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function publishersAudiobooks()
+    {
+        return $this->belongsToMany(
+            Publisher::class,
+            'audio_book_publishers',
+            'audio_book_id',
+            'publisher_id',
+            'id',
+            'id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function narratorsAudiobooks()
+    {
+        return $this->belongsToMany(
+            NarratorAudiobook::class,
+            'audio_book_narrators',
+            'audio_book_id',
+            'narrator_id',
             'id',
             'id'
         );
