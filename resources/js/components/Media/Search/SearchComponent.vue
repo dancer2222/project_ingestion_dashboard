@@ -111,6 +111,7 @@ export default {
     },
     methods: {
         goTo: function (mediaType) {
+            this.query = '';
             this.mediaType = mediaType;
             this.filters = {search_by:'default'};
             this.$router.push({ name: mediaType })
