@@ -78,6 +78,13 @@ class Audiobook extends Model
                 });
 
                 break;
+            case 'productISBN':
+                $key = 'isbn';
+                $query->whereHas('products', function ($q) use ($key, $operator, $needle) {
+                    $q->where($key, $operator, $needle);
+                });
+
+                break;
             default:
                 $key = !is_numeric($q) ? 'title': $key;
                 $query->where($key, $operator, $needle);
