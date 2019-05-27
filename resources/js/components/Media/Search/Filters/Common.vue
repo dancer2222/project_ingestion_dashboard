@@ -25,7 +25,7 @@
             </div>
 
             <div class="custom-control custom-radio custom-control-inline search-radio"
-                v-if="['books', 'audiobooks'].indexOf(mediaType) !== -1">
+                v-if="['books'].indexOf(mediaType) !== -1">
                 <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input"
                    v-model="filters.search_by"
                    value="artist">
@@ -65,11 +65,27 @@
             </div>
 
             <div class="custom-control custom-radio custom-control-inline search-radio"
-                 v-if="['books'].indexOf(mediaType) !== -1">
+                 v-if="['books','audiobooks'].indexOf(mediaType) !== -1">
                 <input type="radio" id="customRadioInline9" name="customRadioInline1" class="custom-control-input"
                        v-model="filters.search_by"
                        value="publisher">
                 <label class="custom-control-label" for="customRadioInline9">Publisher</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                 v-if="['audiobooks'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline10" name="customRadioInline1" class="custom-control-input"
+                       v-model="filters.search_by"
+                       value="dataOriginId">
+                <label class="custom-control-label" for="customRadioInline10">Data_Origin_Id</label>
+            </div>
+
+            <div class="custom-control custom-radio custom-control-inline search-radio"
+                 v-if="['audiobooks'].indexOf(mediaType) !== -1">
+                <input type="radio" id="customRadioInline11" name="customRadioInline1" class="custom-control-input"
+                       v-model="filters.search_by"
+                       value="narrator">
+                <label class="custom-control-label" for="customRadioInline11">Narrators</label>
             </div>
 
 <!--            <books v-if="mediaType === 'books'"></books>-->
