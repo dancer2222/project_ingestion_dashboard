@@ -17,7 +17,6 @@
                     <!--                         v-bind:style="{maxWidth: 250 + 'px'}" alt="Card image cap">-->
 
                     <div class="card-body">
-
                         <div class="row">
                             <AudiobookProducts :products="products" />
                             <p class="card-title mb-2 col-12 col-md-6 col-lg-4" v-if="abook" v-for="(value, key) in abook">

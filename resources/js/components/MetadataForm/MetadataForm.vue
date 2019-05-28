@@ -86,11 +86,7 @@
             };
         },
         methods: {
-            updated() {
-                console.log(this.licensorNames)
-            },
             onChange(e) {
-
                 if (e.target.files !== undefined) {
                     this.file = e.target.files[0];
                 }
@@ -107,7 +103,7 @@
                         }
                     }).then(({data}) => {
                         this.items = data.items;
-                        this.chekInAwsBucket();
+                        this.checkInAwsBucket();
                     })
                         .catch(function (error) {
                             toastr.error(error);
@@ -116,14 +112,13 @@
             },
             submit() {
                 if (this.submitData === true) {
-                    axios.post('/ingestion/movie/ombdApi', {body: this.items})
+                    axios.post('/ingestion/movie/ombdApi', {body: this.items, metadata: this.file.name})
                         .then((response) => {
-                            console.log(response.data)
                             toastr.success('Everything OK');
                         });
                 }
             },
-            chekInAwsBucket() {
+            checkInAwsBucket() {
                 let i;
                 for (i = 0; i < this.items.length; i++) {
                     if (this.items[i].title == '') {

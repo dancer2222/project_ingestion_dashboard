@@ -1,7 +1,9 @@
 <template>
     <div class="container">
-        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#music">Show tracks in album
+        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#music">
+            Show tracks in album
         </button>
+
         <div id="music" class="collapse">
             <ul class="list-group">
                 <li v-for="track in tracks" class="list-group-item" :style="{cursor:'pointer'}">
@@ -37,7 +39,6 @@
                 axios.get('albums/track/' + track.id, {id: track.id})
                     .then(({data}) => {
                         this.trackData = data;
-                        console.log(this.trackData)
                         this.$router.push({
                             name: 'track', path: 'albums/track/' + track.id, params: {track: this.trackData}
                         });
