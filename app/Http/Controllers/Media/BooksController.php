@@ -9,6 +9,10 @@ use App\Http\Controllers\Controller;
 use Managers\BookImageManager;
 
 
+/**
+ * Class BooksController
+ * @package App\Http\Controllers\Media
+ */
 class BooksController extends Controller
 {
     /**
@@ -76,7 +80,6 @@ class BooksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $status = true;
         $message = "Book ($id) successfully updated.";
         $fieldsNeedToBeUpdated = [];
@@ -111,5 +114,4 @@ class BooksController extends Controller
     {
         //
     }
-
 }

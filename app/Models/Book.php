@@ -18,7 +18,15 @@ class Book extends Model
      * @var string
      */
     protected $table = 'book';
+
+    /**
+     * @var bool
+     */
     public $timestamps = false;
+
+    /**
+     * @var array
+     */
     protected $fillable = ['id', 'isbn'];
 
     /**
@@ -26,7 +34,7 @@ class Book extends Model
      * @param $value
      * @return string
      */
-    public function getIdAttribute($value){
+    public function getIdAttribute($value) {
         return (string)$value;
     }
 
@@ -35,14 +43,14 @@ class Book extends Model
      * @param $value
      * @return string
      */
-    public function getIsbnAttribute($value){
+    public function getIsbnAttribute($value) {
         return (string)$value;
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function authors(){
+    public function authors() {
         return $this->belongsToMany(
             Author::class,
             'book_authors',
@@ -56,7 +64,7 @@ class Book extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function artists(){
+    public function artists() {
         return $this->belongsToMany(
             Author::class,
             'book_artists',
@@ -146,5 +154,4 @@ class Book extends Model
 
         return $books;
     }
-
 }
