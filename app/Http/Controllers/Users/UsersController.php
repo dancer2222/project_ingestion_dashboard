@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 
+/**
+ * Class UsersController
+ * @package App\Http\Controllers\Users
+ */
 class UsersController extends Controller
 {
     /**
