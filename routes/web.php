@@ -18,6 +18,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['prefix' => 'ingestion', 'namespace' => 'Ingestion'], function () {
         Route::get('/', 'Process\\MovieIngestionController@indexIngestMovies')->name('indexIngestMovies');
+        Route::get('/image', 'Process\\MovieIngestionController@processImages')->name('processImages');
+
         Route::post('/movie/convertMetadata', 'Process\\MovieIngestionController@convertMetadataFile')->name('convertMetadataFile');
         Route::post('/movie/ombdApi', 'Process\\MovieIngestionController@getDataFromOMBD')->name('ombdApi');
         Route::post('/movie/awsCheck', 'Aws\\AwsController@checkMovieForAwsBucket')->name('awsCheck');
