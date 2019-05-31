@@ -24,6 +24,7 @@ class MovieIngestionController extends Controller
      */
     public $urlImage = 'https://content.milkbox.com/movie/053/177/they-called-him-amen-200x282.jpg';
 
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -44,8 +45,21 @@ class MovieIngestionController extends Controller
         return excelToArray($request->file);
     }
 
+    /**
+     * @param  Request  $request
+     *
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function getDataFromOMBD(Request $request) {
-//        return 'Everything OK';
+        $client = new \GuzzleHttp\Client();
+        $response = [];
+        foreach ($request->body as $key => $data) {
+            $response[$key] = $client->request('POST',
+                'http://www.omdbapi.com/?t='.$data['title'].'&y='.$data['year'].'&apikey='.env('API_MOVIE_KEY'));
+            var_dump(json_decode($response[$key]->getBody()));
+        }
+
         return $request->body;
     }
 
