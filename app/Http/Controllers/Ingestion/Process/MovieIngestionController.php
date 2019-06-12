@@ -58,22 +58,20 @@ class MovieIngestionController extends Controller
         $connection = new AMQPStreamConnection(env('RABBITMQ_HOST'), env('RABBITMQ_PORT'),
             env('RABBITMQ_LOGIN'), env('RABBITMQ_PASSWORD'));
         $channel = $connection->channel();
-        $channel->queue_declare('Processor', false, false, false, false);
+        $channel->queue_declare('movieProcessor', false, false, false, false);
 
         $client = new \GuzzleHttp\Client();
         $response = [];
         foreach ($request->body as $key => $data) {
             $response[$key] = $client->request('POST',
                 'http://www.omdbapi.com/?t='.$data['title'].'&y='.$data['year'].'&apikey='.env('API_MOVIE_KEY'));
+
             $msg = new AMQPMessage(json_encode($response[$key]));
             $channel->basic_publish($msg, '', 'movieProcessor');
         }
 
         $channel->close();
         $connection->close();
-
-        $que = new Que();
-        $que->listen();
 
         return $request->body;
     }
