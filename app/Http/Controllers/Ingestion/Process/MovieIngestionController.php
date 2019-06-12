@@ -55,10 +55,6 @@ class MovieIngestionController extends Controller
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getDataFromOMBD(Request $request) {
-        $connection = new AMQPStreamConnection(env('RABBITMQ_HOST'), env('RABBITMQ_PORT'),
-            env('RABBITMQ_LOGIN'), env('RABBITMQ_PASSWORD'));
-        $channel = $connection->channel();
-        $channel->queue_declare('movieProcessor', false, false, false, false);
 
         $client = new Client();
         $response = [];
@@ -75,15 +71,44 @@ class MovieIngestionController extends Controller
                 )->getBody();
 
             echo $response[$key];
+            //TODO Need to create metadata file process
 
-            $msg = new AMQPMessage($response[$key]);
-            $channel->basic_publish($msg, '', 'movieProcessor');
+            //$arrayMovieLicensors = new ArrayMovieLicensors();
+            //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
+            //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
         }
+
+        return $request->body;
+    }
+
+    /**
+     *
+     */
+    private function sendMovieMessageToRabit ($providerName='MVDEntertainment', $metadataFilePath='mvd\/Mvd_metadata_20180305TT150255+0000.xlsx') {
+
+        $connection = new AMQPStreamConnection(env('RABBITMQ_HOST'), env('RABBITMQ_PORT'),
+            env('RABBITMQ_LOGIN'), env('RABBITMQ_PASSWORD'));
+        $channel = $connection->channel();
+        //$channel->queue_declare('ingestion-feed', false, false, false, false);
+
+        $messageData = [
+            'message'=>[
+                'source' => $providerName,
+                'mediaType' => "Movies",
+                'feedType' => "Delta",
+                'extra' => [
+                    'endTask' => true,
+                    'taskName' => "Reader",
+                    'filePath' =>$metadataFilePath,
+                ]
+            ],
+        ];
+
+        $msg = new AMQPMessage(json_encode($messageData));
+        $channel->basic_publish($msg, '', 'ingestion-feed');
 
         $channel->close();
         $connection->close();
-
-        return $request->body;
     }
 
     /**
