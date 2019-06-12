@@ -23,10 +23,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/movie/convertMetadata', 'Process\\MovieIngestionController@convertMetadataFile')->name('convertMetadataFile');
         Route::post('/movie/ombdApi', 'Process\\MovieIngestionController@getDataFromOMBD')->name('ombdApi');
         Route::post('/movie/awsCheck', 'Aws\\AwsController@checkMovieForAwsBucket')->name('awsCheck');
-
-
     });
-
     
     Route::get('/home', 'HomeController@index')->name('home');
 

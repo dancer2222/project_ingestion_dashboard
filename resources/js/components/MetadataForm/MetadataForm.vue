@@ -61,7 +61,9 @@
                     @click="submit">Start ingestion
             </button>
         </center>
+
     </div>
+
 </template>
 
 <script>
@@ -110,7 +112,8 @@
                         });
                 }
             },
-            submit() {
+            submit(e) {
+
                 if (this.submitData === true) {
                     axios.post('/ingestion/movie/ombdApi', {body: this.items, metadata: this.file.name})
                         .then((response) => {
@@ -141,6 +144,7 @@
                         });
                 }
             },
+
         }
     }
 </script>
