@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Ingestion\Process;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ingestion\ArrayMovieLicensors;
-use Ingestion\Movie\Que;
 use Managers\MovieImageManager;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use GuzzleHttp\Client;
 
 /**
  * Class MovieIngestionController
@@ -60,13 +60,23 @@ class MovieIngestionController extends Controller
         $channel = $connection->channel();
         $channel->queue_declare('movieProcessor', false, false, false, false);
 
-        $client = new \GuzzleHttp\Client();
+        $client = new Client();
         $response = [];
         foreach ($request->body as $key => $data) {
-            $response[$key] = $client->request('POST',
-                'http://www.omdbapi.com/?t='.$data['title'].'&y='.$data['year'].'&apikey='.env('API_MOVIE_KEY'));
+            $response[$key] = $client->request('post',
+                'http://www.omdbapi.com/?t='.$data['title']
+                .'&y='.$data['year'].'&apikey='.env('API_MOVIE_KEY'),
+                [
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Content-type' => 'application/json'
+                    ]
+                ]
+                )->getBody();
 
-            $msg = new AMQPMessage(json_encode($response[$key]));
+            echo $response[$key];
+
+            $msg = new AMQPMessage($response[$key]);
             $channel->basic_publish($msg, '', 'movieProcessor');
         }
 
