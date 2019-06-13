@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ingestion\Process;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ingestion\ArrayMovieLicensors;
+use Ingestion\Movie\MovieProcess;
 use Managers\MovieImageManager;
 use Managers\SpreadSheetManager;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -58,7 +59,9 @@ class MovieIngestionController extends Controller
     public function getDataFromOMBD(Request $request) {
 
         $client = new Client();
+        $movieProcess = new MovieProcess();
         $response = [];
+        $movieData = [];
         foreach ($request->body as $key => $data) {
             $response[$key] = $client->request('post',
                 'http://www.omdbapi.com/?t='.$data['title']
@@ -70,14 +73,17 @@ class MovieIngestionController extends Controller
                     ]
                 ]
                 )->getBody();
+            $movieData[] = $movieProcess->getData($response[$key], $request->src);
 
-            echo $response[$key];
             //TODO Need to create metadata file process
 
             //$arrayMovieLicensors = new ArrayMovieLicensors();
             //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
             //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
         }
+
+        var_dump($movieData);
+        die();
 
         return $request->body;
     }
