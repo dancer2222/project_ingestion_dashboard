@@ -146,4 +146,11 @@ class Movie extends Model
     {
         return $this->hasOne(BrightcoveDb::class, 'id', 'id');
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLastInsertId() {
+        return $this->orderBy('id', 'desc')->select('id')->first()->id;
+    }
 }
