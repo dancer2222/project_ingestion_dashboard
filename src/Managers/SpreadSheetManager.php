@@ -3,6 +3,8 @@
 namespace Managers;
 
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 class SpreadSheetManager
 {
     /**
@@ -68,5 +70,30 @@ class SpreadSheetManager
         return collect($formattedData);
     }
 
+    /**
+     * @param array $metaData
+     * @param string $filePath
+     * @return bool
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public static function arrayToExcel(Array $metaData = [], string $filePath='Test.xlsx') {
 
+        $headers = array_keys($metaData[0]);
+        array_unshift($metaData, $headers);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->fromArray($metaData, NULL, 'A1');
+
+        try{
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save($filePath);
+            return true;
+
+        } catch (\PhpOffice\PhpSpreadsheet\Writer\Exception $e){
+            return false;
+        }
+
+    }
 }

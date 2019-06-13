@@ -116,7 +116,7 @@
 
                 if (this.submitData === true) {
                     axios.post('/ingestion/movie/ombdApi', {body: this.items, metadata: this.file.name,
-                        licensorName: his.licensor})
+                        licensorName: this.licensor})
                         .then((response) => {
                             toastr.success('Everything OK');
                         });

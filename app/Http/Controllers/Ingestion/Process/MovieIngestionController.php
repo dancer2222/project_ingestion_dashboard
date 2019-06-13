@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ingestion\Process;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ingestion\ArrayMovieLicensors;
 use Ingestion\Movie\MovieProcess;
@@ -45,6 +46,8 @@ class MovieIngestionController extends Controller
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function getDataFromOMBD(Request $request) {
 
@@ -77,7 +80,8 @@ class MovieIngestionController extends Controller
             //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
         }
 
-        die();
+        $localMetadataFilePath = $this->setMetadataFileName($request->licensorName);
+        SpreadSheetManager::arrayToExcel($movieData, $localMetadataFilePath);
 
         return $request->body;
     }
@@ -124,5 +128,26 @@ class MovieIngestionController extends Controller
         $img = $movieImageManager->convertImage($title, $urlImage);
 
         return $img[200]->response('jpg');
+    }
+
+    /**
+     * Set local metadata file name for ingestion
+     *
+     * @param string $licensorName
+     * @return string $localMetadataFilePath
+     */
+    private function setMetadataFileName ($licensorName) {
+
+        $dataMetaDataFile = Carbon::now()->toDateTimeString();
+
+        $pattern = '/[:-]/';
+        $dataMetaDataFile = preg_replace($pattern, '', $dataMetaDataFile);
+
+        $pattern = '/ /';
+        $dataMetaDataFile = preg_replace($pattern, '_', $dataMetaDataFile);
+
+        $localMetadataFilePath = $licensorName . "_Metadata_" . $dataMetaDataFile .'.xlsx';
+
+        return $localMetadataFilePath;
     }
 }
