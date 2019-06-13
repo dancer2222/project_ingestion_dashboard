@@ -18,16 +18,6 @@ use GuzzleHttp\Client;
  */
 class MovieIngestionController extends Controller
 {
-    /**
-     * @var string
-     */
-    public $title = 'they-called-him-amen';
-
-    /**
-     * @var string
-     */
-    public $urlImage = 'https://content.milkbox.com/movie/053/177/they-called-him-amen-200x282.jpg';
-
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -59,8 +49,10 @@ class MovieIngestionController extends Controller
 
         $client = new Client();
         $movieProcess = new MovieProcess();
+
         $response = [];
         $movieData = [];
+
         foreach ($request->body as $key => $data) {
             $response[$key] = $client->request('post',
                 'http://www.omdbapi.com/?t='.$data['title']
@@ -72,7 +64,10 @@ class MovieIngestionController extends Controller
                     ]
                 ]
                 )->getBody();
-            $movieData[] = $movieProcess->getData($response[$key], $request->src);
+
+            $movieData []= $movieProcess->getData($response[$key], $data['src']);
+
+            $this->processImages($data['title'], json_decode($response[$key])->Poster  ?? '');
 
             //TODO Need to create metadata file process
 
@@ -81,14 +76,14 @@ class MovieIngestionController extends Controller
             //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
         }
 
-        var_dump($movieData);
         die();
 
         return $request->body;
     }
 
     /**
-     *
+     * @param  string  $providerName
+     * @param  string  $metadataFilePath
      */
     private function sendMovieMessageToRabit ($providerName='MVDEntertainment', $metadataFilePath='mvd\/Mvd_metadata_20180305TT150255+0000.xlsx') {
 
@@ -118,12 +113,14 @@ class MovieIngestionController extends Controller
     }
 
     /**
+     * @param $title
+     * @param $urlImage
+     *
      * @return mixed
      */
-    public function processImages() {
-
+    public function processImages($title, $urlImage) {
         $movieImageManager = new MovieImageManager();
-        $img = $movieImageManager->convertImage($this->title, $this->urlImage);
+        $img = $movieImageManager->convertImage($title, $urlImage);
 
         return $img[200]->response('jpg');
     }

@@ -53,10 +53,6 @@ class MovieProcess
             'alternative_languages' => '',
             'closed_captions_files' => '',
             'closed_captions'       => '',
-            'series'                => [
-                'title'       => '',
-                'description' => ''
-            ]
         ];
 
         return $movieArray;
