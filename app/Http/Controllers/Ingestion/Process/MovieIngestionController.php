@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Ingestion\ArrayMovieLicensors;
 use Ingestion\Movie\MovieProcess;
 use Managers\MovieImageManager;
+use Managers\SpreadSheetManager;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use GuzzleHttp\Client;
@@ -36,7 +37,7 @@ class MovieIngestionController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
     public function convertMetadataFile(Request $request) {
-        return excelToArray($request->file);
+        return SpreadSheetManager::excelToArray($request->file);
     }
 
     /**
@@ -82,8 +83,8 @@ class MovieIngestionController extends Controller
     }
 
     /**
-     * @param  string  $providerName
-     * @param  string  $metadataFilePath
+     * @param string $providerName
+     * @param string $metadataFilePath
      */
     private function sendMovieMessageToRabit ($providerName='MVDEntertainment', $metadataFilePath='mvd\/Mvd_metadata_20180305TT150255+0000.xlsx') {
 
