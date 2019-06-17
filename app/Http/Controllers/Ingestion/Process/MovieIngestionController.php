@@ -125,7 +125,12 @@ class MovieIngestionController extends Controller
      */
     public function processImages($title, $urlImage) {
         $movieImageManager = new MovieImageManager();
-        $img = $movieImageManager->convertImage($title, $urlImage);
+
+        $titleForCover = strtolower($title);
+        $pattern = '/ /';
+        $titleForCover = preg_replace($pattern, '-', $titleForCover);
+
+        $img = $movieImageManager->convertImage($titleForCover, $urlImage);
 
         return $img[200]->response('jpg');
     }
