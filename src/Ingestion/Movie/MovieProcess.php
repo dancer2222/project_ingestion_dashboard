@@ -28,6 +28,9 @@ class MovieProcess
      */
     private function setArray($data, $fileSource) {
 
+        $coverFileName = mb_strtolower(str_replace(' ', '-', $data->Title));
+        $coverFileName .= ".jpg";
+
         $movieArray = [
             'title'                 => $data->Title ?? '',
             'video file name'       => $fileSource ?? '',
@@ -53,6 +56,7 @@ class MovieProcess
             'alternative_languages' => '',
             'closed_captions_files' => '',
             'closed_captions'       => '',
+            'cover_file_name'       => $coverFileName ,
         ];
 
         return $movieArray;

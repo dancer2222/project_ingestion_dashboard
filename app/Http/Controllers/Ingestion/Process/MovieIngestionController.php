@@ -12,6 +12,7 @@ use Managers\SpreadSheetManager;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use GuzzleHttp\Client;
+use Aws\Laravel\AwsFacade;
 
 /**
  * Class MovieIngestionController
@@ -53,9 +54,10 @@ class MovieIngestionController extends Controller
 
         $client = new Client();
         $movieProcess = new MovieProcess();
+        $s3 = AwsFacade::createClient('s3');
 
         $response = [];
-        $movieData = [];
+        $moviesData = [];
 
         foreach ($request->body as $key => $data) {
             $response[$key] = $client->request('post',
@@ -69,15 +71,17 @@ class MovieIngestionController extends Controller
                 ]
                 )->getBody();
 
-            $movieData []= $movieProcess->getData($response[$key], $data['src']);
+            $currentMovie = $movieProcess->getData($response[$key], $data['src']);
+            $this->processImages($currentMovie['cover_file_name'], json_decode($response[$key])->Poster  ?? '');
 
-            $this->processImages($data['title'], json_decode($response[$key])->Poster  ?? '');
+            $this->uploadToAWS($s3, $moviesData['cover_file_name']);
 
-            //TODO Need to upload one big cover to aws near the metadata file
+            $moviesData[] = $currentMovie;
         }
 
         $localMetadataFilePath = $this->setMetadataFileName($request->licensorName);
-        SpreadSheetManager::arrayToExcel($movieData, $localMetadataFilePath);
+        SpreadSheetManager::arrayToExcel($moviesData, $localMetadataFilePath);
+        $this->uploadToAWS($s3, $localMetadataFilePath);
 
         //$arrayMovieLicensors = new ArrayMovieLicensors();
         //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
@@ -118,16 +122,15 @@ class MovieIngestionController extends Controller
     }
 
     /**
-     * @param $title
+     * @param string $coverName
      * @param $urlImage
      *
      * @return mixed
      */
-    public function processImages($title, $urlImage) {
-        $movieImageManager = new MovieImageManager();
+    public function processImages($coverName, $urlImage) {
 
-        $title = mb_strtolower(str_replace(' ', '-', $title));
-        $img = $movieImageManager->convertImage($title, $urlImage);
+        $movieImageManager = new MovieImageManager();
+        $img = $movieImageManager->convertImage($coverName, $urlImage);
 
         return $img[200]->response('jpg');
     }
@@ -142,14 +145,32 @@ class MovieIngestionController extends Controller
 
         $dataMetaDataFile = Carbon::now()->toDateTimeString();
 
-        $pattern = '/[:-]/';
-        $dataMetaDataFile = preg_replace($pattern, '', $dataMetaDataFile);
+        $dataMetaDataFile = preg_replace('/[:-]/', '', $dataMetaDataFile);
 
-        $pattern = '/ /';
-        $dataMetaDataFile = preg_replace($pattern, '_', $dataMetaDataFile);
+        $dataMetaDataFile = preg_replace('/ /', '_', $dataMetaDataFile);
 
         $localMetadataFilePath = $licensorName . "_Metadata_" . $dataMetaDataFile .'.xlsx';
 
         return $localMetadataFilePath;
+    }
+
+    /**
+     * @param $s3
+     * @param string $metadataFileName
+     * @throws \Exception
+     */
+    private function uploadToAWS($s3, $fileName) {
+
+        $s3Key = 'ALEX/' . $fileName;
+
+        try {
+            $s3->putObject(array(
+                'Bucket' => env('AWS_BUCKET'),
+                'Key' => $s3Key,
+                'SourceFile' => $fileName,
+            ));
+        } catch (\Exception $e) {
+
+        }
     }
 }
