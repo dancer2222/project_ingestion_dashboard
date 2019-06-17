@@ -73,15 +73,15 @@ class MovieIngestionController extends Controller
 
             $this->processImages($data['title'], json_decode($response[$key])->Poster  ?? '');
 
-            //TODO Need to create metadata file process
-
-            //$arrayMovieLicensors = new ArrayMovieLicensors();
-            //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
-            //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
+            //TODO Need to upload one big cover to aws near the metadata file
         }
 
         $localMetadataFilePath = $this->setMetadataFileName($request->licensorName);
         SpreadSheetManager::arrayToExcel($movieData, $localMetadataFilePath);
+
+        //$arrayMovieLicensors = new ArrayMovieLicensors();
+        //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
+        //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
 
         return $request->body;
     }
@@ -126,11 +126,8 @@ class MovieIngestionController extends Controller
     public function processImages($title, $urlImage) {
         $movieImageManager = new MovieImageManager();
 
-        $titleForCover = strtolower($title);
-        $pattern = '/ /';
-        $titleForCover = preg_replace($pattern, '-', $titleForCover);
-
-        $img = $movieImageManager->convertImage($titleForCover, $urlImage);
+        $title = mb_strtolower(str_replace(' ', '-', $title));
+        $img = $movieImageManager->convertImage($title, $urlImage);
 
         return $img[200]->response('jpg');
     }

@@ -62,8 +62,8 @@ class MovieImageManager
 
         $images = [];
         $images[200] = Image::make($urlImage)->resize(200, 282)->save($title.'-200x282.jpg');
-        $images[140] = Image::make($urlImage)->resize(140, 210)->save($title.'-140x210.jpg');
-        $images[32] = Image::make($urlImage)->resize(32, 45)->save($title.'-32x45.jpg');
+        //$images[140] = Image::make($urlImage)->resize(140, 210)->save($title.'-140x210.jpg');
+        //$images[32] = Image::make($urlImage)->resize(32, 45)->save($title.'-32x45.jpg');
 
         return $images;
     }
