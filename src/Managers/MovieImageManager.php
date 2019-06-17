@@ -48,20 +48,19 @@ class MovieImageManager
     }
 
     /**
-     * @param $id
-     * @param $title
+     * @param $coverName
      * @param $urlImage
      *
      * @return array
      */
-    public function convertImage($title, $urlImage ) {
+    public function convertImage($coverName, $urlImage ) {
         Image::configure(array('driver' => 'imagick'));
 
         $pattern = '/@\..*\./i';
         $urlImage = preg_replace($pattern,"@.",$urlImage);
 
         $images = [];
-        $images[200] = Image::make($urlImage)->resize(200, 282)->save($title.'-200x282.jpg');
+        $images[200] = Image::make($urlImage)->resize(200, 282)->save($coverName);
         //$images[140] = Image::make($urlImage)->resize(140, 210)->save($title.'-140x210.jpg');
         //$images[32] = Image::make($urlImage)->resize(32, 45)->save($title.'-32x45.jpg');
 
