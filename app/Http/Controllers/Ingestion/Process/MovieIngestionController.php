@@ -73,7 +73,9 @@ class MovieIngestionController extends Controller
 
             $currentMovie = $movieProcess->getData($response[$key], $data['src']);
             $this->processImages($currentMovie['cover file name'], json_decode($response[$key])->Poster ?? '');
+
             AwsManager::uploadObject($currentMovie['cover file name'], $awsS3);
+            unlink($currentMovie['cover file name']);
 
             $moviesData[] = $currentMovie;
         }
@@ -81,6 +83,7 @@ class MovieIngestionController extends Controller
         $localMetadataFilePath = $this->setMetadataFileName($request->licensorName);
         SpreadSheetManager::arrayToExcel($moviesData, $localMetadataFilePath);
         AwsManager::uploadObject($localMetadataFilePath, $awsS3);
+        unlink($localMetadataFilePath);
 
         //$arrayMovieLicensors = new ArrayMovieLicensors();
         //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
