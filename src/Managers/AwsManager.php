@@ -21,8 +21,10 @@ class AwsManager
      */
     public static function checkObjectExists($object, $folder, $s3Client) {
         try {
+//            $result = $s3Client->doesObjectExist(env('AWS_BUCKET'),
+//                $folder.'/Movies/'.$object);
             $result = $s3Client->doesObjectExist(env('AWS_BUCKET'),
-                $folder.'/Movies/'.$object);
+               'ALEX/'.$object);
         } catch (AwsException $exception) {
             return json_encode($exception->getMessage());
         }
