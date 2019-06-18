@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Providers;
 use App\Models\DataSourceProvider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use function view;
 
 /**
  * Class ProvidersController

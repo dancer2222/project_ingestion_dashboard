@@ -3,7 +3,6 @@
 
 namespace Managers;
 
-
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 
@@ -27,10 +26,8 @@ class AwsManager
         } catch (AwsException $exception) {
             return json_encode($exception->getMessage());
         }
-        $s3Client->doesObjectExist(env('AWS_BUCKET'),
-            $folder.'/Movies/'.$object);
 
-        return json_encode($result);
+        return $result;
     }
 
     /**
