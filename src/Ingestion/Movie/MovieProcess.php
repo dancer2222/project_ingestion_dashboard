@@ -56,7 +56,7 @@ class MovieProcess
             'alternative_languages' => '',
             'closed_captions_files' => '',
             'closed_captions'       => '',
-            'cover_file_name'       => $coverFileName ,
+            'cover file name'       => $coverFileName ,
         ];
 
         return $movieArray;

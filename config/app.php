@@ -164,7 +164,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Aws\Laravel\AwsServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
         /*
@@ -174,6 +173,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         // App\Providers\EventServiceProvider::class,
+        App\Providers\AwsServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
