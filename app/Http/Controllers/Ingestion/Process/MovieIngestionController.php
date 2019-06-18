@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Ingestion\Process;
 
 use App\Http\Controllers\Controller;
+use Aws\S3\S3Client;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ingestion\ArrayMovieLicensors;
 use Ingestion\Movie\MovieProcess;
+use Managers\AwsManager;
 use Managers\MovieImageManager;
 use Managers\SpreadSheetManager;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use GuzzleHttp\Client;
-use Aws\Laravel\AwsFacade;
 
 /**
  * Class MovieIngestionController
@@ -44,17 +45,16 @@ class MovieIngestionController extends Controller
 
     /**
      * @param  Request  $request
+     * @param  S3Client  $awsS3
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function getDataFromOMBD(Request $request) {
-
+    public function getDataFromOMBD(Request $request,  S3Client $awsS3) {
         $client = new Client();
         $movieProcess = new MovieProcess();
-        $s3 = AwsFacade::createClient('s3');
 
         $response = [];
         $moviesData = [];
@@ -66,22 +66,21 @@ class MovieIngestionController extends Controller
                 [
                     'headers' => [
                         'Accept' => 'application/json',
-                        'Content-type' => 'application/json'
-                    ]
+                        'Content-type' => 'application/json',
+                    ],
                 ]
-                )->getBody();
+            )->getBody();
 
             $currentMovie = $movieProcess->getData($response[$key], $data['src']);
-            $this->processImages($currentMovie['cover_file_name'], json_decode($response[$key])->Poster  ?? '');
-
-            $this->uploadToAWS($s3, $moviesData['cover_file_name']);
+            $this->processImages($currentMovie['cover file name'], json_decode($response[$key])->Poster ?? '');
+            AwsManager::uploadObject($currentMovie['cover file name'], $awsS3);
 
             $moviesData[] = $currentMovie;
         }
 
         $localMetadataFilePath = $this->setMetadataFileName($request->licensorName);
         SpreadSheetManager::arrayToExcel($moviesData, $localMetadataFilePath);
-        $this->uploadToAWS($s3, $localMetadataFilePath);
+        AwsManager::uploadObject($localMetadataFilePath, $awsS3);
 
         //$arrayMovieLicensors = new ArrayMovieLicensors();
         //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
@@ -91,10 +90,13 @@ class MovieIngestionController extends Controller
     }
 
     /**
-     * @param string $providerName
-     * @param string $metadataFilePath
+     * @param  string  $providerName
+     * @param  string  $metadataFilePath
      */
-    private function sendMovieMessageToRabit ($providerName='MVDEntertainment', $metadataFilePath='mvd\/Mvd_metadata_20180305TT150255+0000.xlsx') {
+    private function sendMovieMessageToRabit(
+        $providerName = 'MVDEntertainment',
+        $metadataFilePath = 'mvd\/Mvd_metadata_20180305TT150255+0000.xlsx'
+    ) {
 
         $connection = new AMQPStreamConnection(env('RABBITMQ_HOST'), env('RABBITMQ_PORT'),
             env('RABBITMQ_LOGIN'), env('RABBITMQ_PASSWORD'));
@@ -102,15 +104,15 @@ class MovieIngestionController extends Controller
         //$channel->queue_declare('ingestion-feed', false, false, false, false);
 
         $messageData = [
-            'message'=>[
+            'message' => [
                 'source' => $providerName,
                 'mediaType' => "Movies",
                 'feedType' => "Delta",
                 'extra' => [
                     'endTask' => true,
                     'taskName' => "Reader",
-                    'filePath' =>$metadataFilePath,
-                ]
+                    'filePath' => $metadataFilePath,
+                ],
             ],
         ];
 
@@ -122,7 +124,7 @@ class MovieIngestionController extends Controller
     }
 
     /**
-     * @param string $coverName
+     * @param  string  $coverName
      * @param $urlImage
      *
      * @return mixed
@@ -138,10 +140,11 @@ class MovieIngestionController extends Controller
     /**
      * Set local metadata file name for ingestion
      *
-     * @param string $licensorName
+     * @param  string  $licensorName
+     *
      * @return string $localMetadataFilePath
      */
-    private function setMetadataFileName ($licensorName) {
+    private function setMetadataFileName($licensorName) {
 
         $dataMetaDataFile = Carbon::now()->toDateTimeString();
 
@@ -149,28 +152,26 @@ class MovieIngestionController extends Controller
 
         $dataMetaDataFile = preg_replace('/ /', '_', $dataMetaDataFile);
 
-        $localMetadataFilePath = $licensorName . "_Metadata_" . $dataMetaDataFile .'.xlsx';
+        $localMetadataFilePath = $licensorName."_Metadata_".$dataMetaDataFile.'.xlsx';
 
         return $localMetadataFilePath;
     }
 
     /**
-     * @param $s3
-     * @param string $metadataFileName
-     * @throws \Exception
+     * @param  Request  $request
+     * @param  S3Client  $awsS3
+     *
+     * @return false|string
      */
-    private function uploadToAWS($s3, $fileName) {
+    public function checkMovieForAwsBucket(Request $request, S3Client $awsS3) {
+        $arrayMovieLicensors = new ArrayMovieLicensors();
 
-        $s3Key = 'ALEX/' . $fileName;
+        $result = AwsManager::checkObjectExists(
+                $request->body,
+                $arrayMovieLicensors->getFolderName($request->folder),
+                $awsS3
+            );
 
-        try {
-            $s3->putObject(array(
-                'Bucket' => env('AWS_BUCKET'),
-                'Key' => $s3Key,
-                'SourceFile' => $fileName,
-            ));
-        } catch (\Exception $e) {
-
-        }
+        return json_encode($result);
     }
 }
