@@ -3,7 +3,6 @@
 
 namespace Ingestion\Movie;
 
-
 /**
  * Class MovieProcess
  * @package Ingestion\Movie
