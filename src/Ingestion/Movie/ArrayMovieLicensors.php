@@ -39,7 +39,7 @@ class ArrayMovieLicensors
         'Imira' => '',
         'Aenetworks' => '',
         'BrainStormMedia' => '',
-        'MVDEntertainment' => 'MVD',
+        'MVDEntertainment' => 'ALEX',
     ];
 
     /**

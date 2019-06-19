@@ -85,9 +85,9 @@ class MovieIngestionController extends Controller
         AwsManager::uploadObject($localMetadataFilePath, $awsS3);
         unlink($localMetadataFilePath);
 
-        //$arrayMovieLicensors = new ArrayMovieLicensors();
-        //$filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . '\/Mvd_metadata_20180305TT150255+0000.xlsx';
-        //$this->sendMovieMessageToRabit($request->licensorName, $filePath);
+        $arrayMovieLicensors = new ArrayMovieLicensors();
+        $filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . "/" . $localMetadataFilePath;
+        $this->sendMovieMessageToRabit($request->licensorName, $filePath);
 
         return $request->body;
     }
