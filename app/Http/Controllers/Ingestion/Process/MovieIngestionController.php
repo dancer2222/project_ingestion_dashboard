@@ -155,7 +155,7 @@ class MovieIngestionController extends Controller
 
         $dataMetaDataFile = preg_replace('/ /', '_', $dataMetaDataFile);
 
-        $localMetadataFilePath = $licensorName."_Metadata_".$dataMetaDataFile.'.xlsx';
+        $localMetadataFilePath = $licensorName."_Metadata_".$dataMetaDataFile.'+0000.xlsx';
 
         return $localMetadataFilePath;
     }
