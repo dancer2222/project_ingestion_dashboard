@@ -50,7 +50,7 @@ class MovieProcess
             'episode_number'        => '',
             'tv_rating_id'          => '',
             'mpaa_rating'           => $data->imdbRating ?? '',
-            'media_geo_restrict'    => '',
+            'media_geo_restrict'    => 'US, CA',
             'data_origin_id'        => '',
             'alternative_languages' => '',
             'closed_captions_files' => '',
