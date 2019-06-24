@@ -31,7 +31,7 @@ class MovieProcess
         $coverFileName .= ".jpg";
 
         $movieArray = [
-            'title'                 => $data->Title ?? '',
+            'movie title/series title'         => $data->Title ?? '',
             'video file name'       => $fileSource ?? '',
             'caption file name'     => '',
             'description'           => $data->Plot ?? '',
@@ -56,6 +56,11 @@ class MovieProcess
             'closed_captions_files' => '',
             'closed_captions'       => '',
             'cover file name'       => $coverFileName ,
+            'episode title' => '',
+            'series name' => '',
+            'description - series' => '',
+            'description - episode' => '',
+
         ];
 
         return $movieArray;

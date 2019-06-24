@@ -26,22 +26,15 @@
         <table class="table table-bordered table-hover" v-if="items !== null">
             <thead class="thead-light">
             <tr>
-                <th width="1">Title</th>
-                <th width="1">Year</th>
-                <th width="1">Source filename</th>
+                <th width="1" v-for="(movie, index) in items[0]">{{index}}</th>
                 <th width="1">Present in AWS</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="movie in items">
-                <td>
-                    <span>{{ movie.title }}</span>
-                </td>
-                <td>
-                    <span>{{ movie.year }}</span>
-                </td>
-                <td>
-                    <span>{{ movie.src }}</span>
+            <tr v-for="(movie, index) in items">
+                <td v-for="value in movie">
+                    <span>{{ value }}</span>
+
                 </td>
                 <td>
                     <span v-if="movie.saved === true">
