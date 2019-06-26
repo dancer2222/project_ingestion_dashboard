@@ -26,7 +26,8 @@ class MovieIngestionController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function indexIngestMovies() {
+    public function indexIngestMovies()
+    {
         $arrayMovieLicensors = new ArrayMovieLicensors();
 
         return view('ingestion.metadataForm', ['licensorNames' => $arrayMovieLicensors->getLicensorNames()]);
@@ -39,7 +40,8 @@ class MovieIngestionController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    public function convertMetadataFile(Request $request) {
+    public function convertMetadataFile(Request $request)
+    {
         return SpreadSheetManager::excelToArray($request->file);
     }
 
@@ -52,7 +54,8 @@ class MovieIngestionController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function getDataFromOMBD(Request $request,  S3Client $awsS3) {
+    public function getDataFromOMBD(Request $request, S3Client $awsS3)
+    {
         $client = new Client();
         $movieProcess = new MovieProcess();
 
@@ -61,17 +64,30 @@ class MovieIngestionController extends Controller
 
         foreach ($request->body as $key => $data) {
             $response[$key] = $client->request('post',
-                'http://www.omdbapi.com/?t='.$data['title']
+                'http://www.omdbapi.com/?t='.$data['title'].'asd'
                 .'&y='.$data['year'].'&apikey='.env('API_MOVIE_KEY'),
                 [
                     'headers' => [
-                        'Accept' => 'application/json',
+                        'Accept'       => 'application/json',
                         'Content-type' => 'application/json',
                     ],
                 ]
             )->getBody();
 
-            $currentMovie = $movieProcess->getData($response[$key], $data['src']);
+            if (json_decode($response[$key])->Response === 'False') {
+                $response[$key] = $client->request('post',
+                    'http://www.omdbapi.com/?t='.$data['title']
+                    .'&apikey='.env('API_MOVIE_KEY'),
+                    [
+                        'headers' => [
+                            'Accept'       => 'application/json',
+                            'Content-type' => 'application/json',
+                        ],
+                    ]
+                )->getBody();
+            }
+
+            $currentMovie = $movieProcess->getData($response[$key], $data['src'], $data);
             $this->processImages($currentMovie['cover file name'], json_decode($response[$key])->Poster ?? '');
 
             AwsManager::uploadObject($currentMovie['cover file name'], $awsS3);
@@ -86,7 +102,7 @@ class MovieIngestionController extends Controller
         unlink($localMetadataFilePath);
 
         $arrayMovieLicensors = new ArrayMovieLicensors();
-        $filePath = $arrayMovieLicensors->getFolderName($request->licensorName) . "/" . $localMetadataFilePath;
+        $filePath = $arrayMovieLicensors->getFolderName($request->licensorName)."/".$localMetadataFilePath;
         $this->sendMovieMessageToRabit($request->licensorName, $filePath);
 
         return $request->body;
@@ -108,11 +124,11 @@ class MovieIngestionController extends Controller
 
         $messageData = [
             'message' => [
-                'source' => $providerName,
+                'source'    => $providerName,
                 'mediaType' => "Movies",
-                'feedType' => "Delta",
-                'extra' => [
-                    'endTask' => true,
+                'feedType'  => "Delta",
+                'extra'     => [
+                    'endTask'  => true,
                     'taskName' => "Reader",
                     'filePath' => $metadataFilePath,
                 ],
@@ -132,7 +148,8 @@ class MovieIngestionController extends Controller
      *
      * @return mixed
      */
-    public function processImages($coverName, $urlImage) {
+    public function processImages($coverName, $urlImage)
+    {
 
         $movieImageManager = new MovieImageManager();
         $img = $movieImageManager->convertImage($coverName, $urlImage);
@@ -147,7 +164,8 @@ class MovieIngestionController extends Controller
      *
      * @return string $localMetadataFilePath
      */
-    private function setMetadataFileName($licensorName) {
+    private function setMetadataFileName($licensorName)
+    {
 
         $dataMetaDataFile = Carbon::now()->toDateTimeString();
 
@@ -166,14 +184,15 @@ class MovieIngestionController extends Controller
      *
      * @return false|string
      */
-    public function checkMovieForAwsBucket(Request $request, S3Client $awsS3) {
+    public function checkMovieForAwsBucket(Request $request, S3Client $awsS3)
+    {
         $arrayMovieLicensors = new ArrayMovieLicensors();
 
         $result = AwsManager::checkObjectExists(
-                $request->body,
-                $arrayMovieLicensors->getFolderName($request->folder),
-                $awsS3
-            );
+            $request->body,
+            $arrayMovieLicensors->getFolderName($request->folder),
+            $awsS3
+        );
 
         return json_encode($result);
     }
