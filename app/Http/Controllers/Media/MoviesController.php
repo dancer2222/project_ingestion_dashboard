@@ -60,7 +60,7 @@ class MoviesController extends Controller
             'producers:id,name',
             'directors:id,name',
             'writers:id,name,status',
-            'brightcoveId:id,brightcove_Id,status,brightcove_trailer_id,non_drm_brightcove_id'
+            'brightcoveId:id,brightcove_Id,status,non_drm_brightcove_id'
         ])->first();
 
         if($movie && $movie->num_of_images > 0){
