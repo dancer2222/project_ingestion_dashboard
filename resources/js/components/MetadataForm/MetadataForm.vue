@@ -111,7 +111,7 @@
                     axios.post('/ingestion/movie/ombdApi', {body: this.items, metadata: this.file.name,
                         licensorName: this.licensor})
                         .then((response) => {
-                            toastr.success('Everything OK');
+                            toastr.success('Movies data send to project ingestion');
                         });
                 }
             },

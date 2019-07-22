@@ -33,7 +33,7 @@ class MovieProcess
         $coverFileName .= ".jpg";
 
         $movieArray = [
-            'movie title/series title' => $firstData['title'] ?? $data->Title ?? '',
+            'title' => $firstData['title'] ?? $data->Title ?? '',
             'video file name'          => $fileSource ?? '',
             'caption file name'        => '',
             'description'              => $firstData['description'] ?? $data->Plot,
@@ -52,7 +52,7 @@ class MovieProcess
             'episode_number'           => $firstData['episode_number'] ?? '',
             'tv_rating_id'             => $data->imdbRating ?? '',
             'mpaa_rating'              => $data->imdbRating ?? '',
-            'media_geo_restrict'       => 'US, CA',
+//            'media_geo_restrict'       => '',
             'data_origin_id'           => '',
             'alternative_languages'    => '',
             'closed_captions_files'    => '',

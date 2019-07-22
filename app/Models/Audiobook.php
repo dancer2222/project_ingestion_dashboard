@@ -160,6 +160,6 @@ class Audiobook extends Model
             'product_id',
             'id',
             'id'
-        )->withPivot('subscription_type');
+        );
     }
 }

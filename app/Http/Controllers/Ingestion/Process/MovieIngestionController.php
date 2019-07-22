@@ -127,11 +127,12 @@ class MovieIngestionController extends Controller
                 'source'    => $providerName,
                 'mediaType' => "Movies",
                 'feedType'  => "Delta",
-                'extra'     => [
-                    'endTask'  => true,
-                    'taskName' => "Reader",
-                    'filePath' => $metadataFilePath,
-                ],
+
+            ],
+            'extra'     => [
+                'endTask'  => true,
+                'taskName' => "Reader",
+                'filePath' => $metadataFilePath,
             ],
         ];
 
