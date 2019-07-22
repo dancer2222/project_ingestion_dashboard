@@ -25,33 +25,48 @@ body {
   min-height: 100vh !important;
 }
 
-header .form-inline .search-form button.find {
-  right: 40px;
-}
+header .header-menu {
+  	.form-inline {
+		background: white;
 
-header .form-inline .search-form select {
-  background: #131c21;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  position: absolute;
-  right: 73px;
-  top: 14%;
-}
+    	.search-form{
 
-header .form-inline .search-form button.find:hover,
-header .form-inline .search-form button.search-close:hover,
-header .form-inline .search-form select:hover {
-  color: #949494 !important;
-}
+			input[type="text"] {
+				background: white;
+				color: #131c21;
+				border-bottom: 2px solid $blue;
+				padding: 10px 221px 10px 15px;
+			}
 
-header .form-inline .search-form select:hover,
-header .form-inline .search-form select:hover option {
-  color: #fff !important;
-}
+      		button.find {
+				right: 40px;
+				color: $blue;
+			}
+			button.search-close {
+				color: $blue;
+			}
+			select {
+				background: white;
+				border: none;
+				border-bottom: 1px solid $blue;
+				color: #000;
+				font-size: 16px;
+				position: absolute;
+				right: 73px;
+				top: 14%;
+				outline: none;
+				box-shadow: none;
 
-header .form-inline .search-form input[type="text"] {
-  padding: 10px 221px 10px 15px !important;
+				option {
+					color: #000;
+				}
+			}
+			button.find:hover,
+			button.search-close:hover {
+				color: #949494;
+			}
+    	}
+  	}
 }
 
 // Search
@@ -59,10 +74,10 @@ header .form-inline .search-form input[type="text"] {
   color: #403d44;
   font-weight: 500;
   text-decoration-line: underline;
-}
 
-#search-filters-toggler:hover {
-  text-decoration-style: dotted;
+  &:hover {
+	text-decoration-style: dotted;
+  }
 }
 
 // Search loader
@@ -72,16 +87,17 @@ header .form-inline .search-form input[type="text"] {
   position: relative;
   overflow: hidden;
   background-color: #ddd;
-}
-.loader:before{
-  display: block;
-  position: absolute;
-  content: "";
-  left: -200px;
-  width: 200px;
-  height: 4px;
-  background-color: #2980b9;
-  animation: loading 2s linear infinite;
+
+  &:before{
+	display: block;
+	position: absolute;
+	content: "";
+	left: -200px;
+	width: 200px;
+	height: 4px;
+	background-color: #2980b9;
+	animation: loading 2s linear infinite;
+  }
 }
 
 @keyframes loading {
@@ -91,4 +107,114 @@ header .form-inline .search-form input[type="text"] {
   80% { left: 50%;}
   95% {left: 120%;}
   to {left: 100%;}
+}
+
+.content {
+	.card {
+		.card-header {
+			line-height: 2.25rem;
+			
+			h4 {
+				line-height: 2.25rem;
+			}
+		}
+		.card-body {
+			.card_info_wrapper {
+				.card {
+					padding: 1rem 0;
+
+					@include media-breakpoint-down(md) {
+						flex-direction: column;
+						padding: 1rem;
+					}
+
+					&.border-success {
+						border: 1px solid;
+					}
+
+					.row {
+						display: block;
+						margin: 0;
+
+						.image_wrapper {
+							float: right;
+							width: 200px;
+							text-align: center;
+							margin-right: 1rem;
+							background: white;
+							position: relative;
+							z-index: 1;
+	
+							@include media-breakpoint-down(md) {
+								float: none;
+								margin: 0 auto;
+							}
+	
+							img {
+								margin-top: 1rem;
+							}
+	
+							.status {
+								border-radius: 12px;
+								padding: 0px 10px 2px;
+	
+								.badge-success {
+									background-color: #26dad2;
+								}
+								.badge-danger {
+									background-color: #ef5350;
+								}
+							}
+						}
+
+						.card-title {
+							margin: 0;
+
+							button.btn-outline-dark + div b {
+								border-bottom: none;
+							}							
+							b {
+								display: block;
+								border-bottom: 1px solid #e7e7e7;
+								line-height: 2rem;
+								padding: 0.5rem 0;
+
+								.title {
+									color: #5a6671;
+									text-transform: capitalize;
+								}
+
+								.green {
+									color: #38c172;
+								}
+							}
+						}
+					}
+				}
+			}
+			.card_tabs_wrapper {
+				.customtab2 {
+					li {
+						a.nav-link {
+							border: 0 none;
+							color: #67757c;
+							line-height: 1rem;
+							padding: 1rem 1rem 14px;
+							border-radius: 1rem 1rem 0 0;
+
+							&.active {
+								background: #1976d2 none repeat scroll 0 0;
+								color: #fff;
+							}
+						}
+					}
+				}
+				.tab-content {
+					.tab-pane {
+						padding: 1.5rem;
+					}
+				}
+			}
+		}
+	}
 }
