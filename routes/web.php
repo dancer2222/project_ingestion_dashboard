@@ -73,6 +73,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::name('books')->prefix('/books')->group(function () {
             Route::get('/total_count', 'BooksStatsController@countAll')->name('total_count');
         });
+
+        // Music
+        Route::name('music')->prefix('/music-Album')->group(function () {
+            Route::get('/total_count', 'AlbumsStatsController@countAll')->name('total_count');
+        });
     });
 
     Route::namespace('Media')->group(function () {
