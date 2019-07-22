@@ -116,7 +116,7 @@ $user = auth()->user()
                             <form class="search-form">
                                 <input class="form-control mr-sm-2" type="text" placeholder="Search ..." aria-label="Search">
 
-                                <select class="custom-select custom-select-sm border-bottom rounded-0">
+                                <select class="custom-select custom-select-sm rounded-0">
                                     <option disabled selected>Media type</option>
                                     <option value="1">Books</option>
                                     <option value="2">Movies</option>
@@ -124,7 +124,7 @@ $user = auth()->user()
                                     <option value="4">Albums</option>
                                 </select>
 
-                                <button class="find color-white">
+                                <button class="find">
                                     <i class="fas fa-search"></i>
                                 </button>
 

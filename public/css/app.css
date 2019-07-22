@@ -16678,33 +16678,46 @@ body {
   min-height: 100vh !important;
 }
 
-header .form-inline .search-form button.find {
-  right: 40px;
+header .header-menu .form-inline {
+  background: white;
 }
 
-header .form-inline .search-form select {
-  background: #131c21;
+header .header-menu .form-inline .search-form input[type=text] {
+  background: white;
+  color: #131c21;
+  border-bottom: 2px solid #3490dc;
+  padding: 10px 221px 10px 15px;
+}
+
+header .header-menu .form-inline .search-form button.find {
+  right: 40px;
+  color: #3490dc;
+}
+
+header .header-menu .form-inline .search-form button.search-close {
+  color: #3490dc;
+}
+
+header .header-menu .form-inline .search-form select {
+  background: white;
   border: none;
-  color: #fff;
+  border-bottom: 1px solid #3490dc;
+  color: #000;
   font-size: 16px;
   position: absolute;
   right: 73px;
   top: 14%;
+  outline: none;
+  box-shadow: none;
 }
 
-header .form-inline .search-form button.find:hover,
-header .form-inline .search-form button.search-close:hover,
-header .form-inline .search-form select:hover {
-  color: #949494 !important;
+header .header-menu .form-inline .search-form select option {
+  color: #000;
 }
 
-header .form-inline .search-form select:hover,
-header .form-inline .search-form select:hover option {
-  color: #fff !important;
-}
-
-header .form-inline .search-form input[type=text] {
-  padding: 10px 221px 10px 15px !important;
+header .header-menu .form-inline .search-form button.find:hover,
+header .header-menu .form-inline .search-form button.search-close:hover {
+  color: #949494;
 }
 
 #search-filters-toggler {
@@ -16791,5 +16804,108 @@ header .form-inline .search-form input[type=text] {
   to {
     left: 100%;
   }
+}
+
+.content .card .card-header {
+  line-height: 2.25rem;
+}
+
+.content .card .card-header h4 {
+  line-height: 2.25rem;
+}
+
+.content .card .card-body .card_info_wrapper .card {
+  padding: 1rem 0;
+}
+
+@media (max-width: 991.98px) {
+  .content .card .card-body .card_info_wrapper .card {
+    flex-direction: column;
+    padding: 1rem;
+  }
+}
+
+.content .card .card-body .card_info_wrapper .card.border-success {
+  border: 1px solid;
+}
+
+.content .card .card-body .card_info_wrapper .card .row {
+  display: block;
+  margin: 0;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .image_wrapper {
+  float: right;
+  width: 200px;
+  text-align: center;
+  margin-right: 1rem;
+  background: white;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 991.98px) {
+  .content .card .card-body .card_info_wrapper .card .row .image_wrapper {
+    float: none;
+    margin: 0 auto;
+  }
+}
+
+.content .card .card-body .card_info_wrapper .card .row .image_wrapper img {
+  margin-top: 1rem;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .image_wrapper .status {
+  border-radius: 12px;
+  padding: 0px 10px 2px;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .image_wrapper .status .badge-success {
+  background-color: #26dad2;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .image_wrapper .status .badge-danger {
+  background-color: #ef5350;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .card-title {
+  margin: 0;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .card-title button.btn-outline-dark + div b {
+  border-bottom: none;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .card-title b {
+  display: block;
+  border-bottom: 1px solid #e7e7e7;
+  line-height: 2rem;
+  padding: 0.5rem 0;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .card-title b .title {
+  color: #5a6671;
+  text-transform: capitalize;
+}
+
+.content .card .card-body .card_info_wrapper .card .row .card-title b .green {
+  color: #38c172;
+}
+
+.content .card .card-body .card_tabs_wrapper .customtab2 li a.nav-link {
+  border: 0 none;
+  color: #67757c;
+  line-height: 1rem;
+  padding: 1rem 1rem 14px;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.content .card .card-body .card_tabs_wrapper .customtab2 li a.nav-link.active {
+  background: #1976d2 none repeat scroll 0 0;
+  color: #fff;
+}
+
+.content .card .card-body .card_tabs_wrapper .tab-content .tab-pane {
+  padding: 1.5rem;
 }
 
